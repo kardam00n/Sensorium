@@ -1,0 +1,119 @@
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { ChevronRight, ChevronLeft, Zap } from 'lucide-react';
+
+const TimelineItem = ({ title, content, isActive, onClick }) => (
+  <motion.div
+    className={`cursor-pointer ${isActive ? 'bg-indigo-600' : 'bg-indigo-800'} rounded-lg p-4 mb-4 transition-colors duration-300`}
+    whileHover={{ scale: 1.05 }}
+    onClick={onClick}
+  >
+    <h3 className="text-xl font-bold mb-2">{title}</h3>
+    {isActive && (
+      <motion.div
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: 'auto' }}
+        exit={{ opacity: 0, height: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <p className="text-indigo-200">{content}</p>
+      </motion.div>
+    )}
+  </motion.div>
+);
+
+const SensoriumTimeline = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const timelineItems = [
+    {
+      title: "Cel Projektu",
+      content: "Projekt Sensorium ma na celu prezentacje nowatorskich postaw artystycznych na styku sztuki, nauki i technologii, poszukując nieoczywistych inspiracji i przekraczając klasyczne definicje sztuki."
+    },
+    {
+      title: "Główne Założenia",
+      content: "Poszerzenie wpływu sztuki medialnej i technologicznej w Polsce, otwarcie na nowe praktyki naukowe i artystyczne, wprowadzenie krytycznego dyskursu o technokulturze."
+    },
+    {
+      title: "Prezentacje Artystyczne",
+      content: "Działania artystyczne w różnych przestrzeniach wystawienniczych w Krakowie stanowią zapis doświadczeń naukowo-artystycznych i odpowiedź na oczekiwania społeczne."
+    },
+    {
+      title: "Kontekst Technologiczny",
+      content: "Technologia staje się integralną częścią procesów społecznych, politycznych i ekonomicznych, prowadząc do redefinicji pojęcia sztuki w kontekście globalizacji cyfrowej."
+    },
+    {
+      title: "Metodologia",
+      content: "Definiujemy formy wypowiedzi artystycznej w nowych mediach poprzez uważną obserwację środowiska, kreatywność, innowacje oraz aspiracje do tworzenia dzieł o uniwersalnym znaczeniu."
+    },
+    {
+      title: "Perspektywa Badawcza",
+      content: "Według Stephena Wilsona badania naukowe radykalnie przekształcają naszą kulturę, a sztuka musi być istotną częścią tych procesów."
+    },
+    {
+      title: "Finansowanie",
+      content: "Projekt dofinansowano ze środków Ministra Kultury i Dziedzictwa Narodowego w ramach programu Rozwój Sektorów Kreatywnych."
+    }
+  ];
+
+  const nextItem = () => {
+    setActiveIndex((prevIndex) => (prevIndex + 1) % timelineItems.length);
+  };
+
+  const prevItem = () => {
+    setActiveIndex((prevIndex) => (prevIndex - 1 + timelineItems.length) % timelineItems.length);
+  };
+
+  return (
+    <div className="bg-indigo-900 rounded-xl p-8 shadow-2xl mt-12">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex items-center justify-center mb-8"
+      >
+        <Zap className="text-yellow-400 mr-4" size={48} />
+        <h2 className="text-4xl font-bold text-indigo-100">Projekt Sensorium</h2>
+      </motion.div>
+
+      <div className="relative">
+        <motion.div
+          className="overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          {timelineItems.map((item, index) => (
+            <TimelineItem
+              key={index}
+              title={item.title}
+              content={item.content}
+              isActive={index === activeIndex}
+              onClick={() => setActiveIndex(index)}
+            />
+          ))}
+        </motion.div>
+
+        <div className="flex justify-between mt-4">
+          <motion.button
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={prevItem}
+          >
+            <ChevronLeft size={24} />
+          </motion.button>
+          <motion.button
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={nextItem}
+          >
+            <ChevronRight size={24} />
+          </motion.button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SensoriumTimeline;

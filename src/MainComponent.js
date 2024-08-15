@@ -3,19 +3,23 @@ import Navbar from './components/Navbar';
 import MobileMenu from './components/MobileMenu';
 import HomeSection from './components/HomeSection';
 import PostsSection from './components/PostsSection';
-import AboutSection from './components/AboutSection';
+import PlacesSection from './components/PlacesSection';
+import TeamSection from './components/TeamSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import PostModal from './components/PostModal';
+import AnimatedSection from './components/AnimatedSection';
+import AboutSection from './components/AboutSection';
 
 const SensoriumWebsite = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activePost, setActivePost] = useState(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isAtTop, setIsAtTop] = useState(true);
   const videoRef = useRef(null);
 
-  const sections = ['home', 'posts', 'about', 'contact'];
+  const sections = ['home', 'posts', 'about', 'places', 'team', 'contact'];
 
   const posts = [
     { 
@@ -46,6 +50,13 @@ const SensoriumWebsite = () => {
       content: 'Pełna treść posta o zwrocie haptycznym...', 
       thumbnail: '/workshop.jpg'
     },
+    { 
+      id: 5, 
+      title: 'art&science – debata w Pałacu Sztuki', 
+      excerpt: 'Dowiedz się o nowych technologiach w zakresie wrażeń dotykowych.', 
+      content: 'Pełna treść posta o zwrocie haptycznym...', 
+      thumbnail: '/debate2.jpg'
+    },
   ];
 
   useEffect(() => {
@@ -55,6 +66,8 @@ const SensoriumWebsite = () => {
       const fullHeight = document.documentElement.scrollHeight;
       const scrollPercentage = (scrollPosition / (fullHeight - windowHeight)) * 100;
       setScrollProgress(scrollPercentage);
+      
+      setIsAtTop(scrollPosition < 50);
       
       sections.forEach(section => {
         const element = document.getElementById(section);
@@ -69,8 +82,9 @@ const SensoriumWebsite = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Call once to set initial state
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [sections]);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -115,6 +129,7 @@ const SensoriumWebsite = () => {
         toggleMenu={toggleMenu} 
         isMenuOpen={isMenuOpen}
         scrollProgress={scrollProgress}
+        isAtTop={isAtTop}
       />
       
       <MobileMenu 
@@ -125,11 +140,25 @@ const SensoriumWebsite = () => {
         scrollToSection={scrollToSection}
       />
 
-      <main className="pt-16">
-        <HomeSection videoRef={videoRef} scrollToSection={scrollToSection} />
-        <PostsSection posts={posts} openPost={openPost} />
-        <AboutSection />
-        <ContactSection />
+      <main>
+        <AnimatedSection id="home" animation="fadeIn">
+          <HomeSection videoRef={videoRef} scrollToSection={scrollToSection} />
+        </AnimatedSection>
+        <AnimatedSection id="posts" animation="slideUp">
+          <PostsSection posts={posts} openPost={openPost} />
+        </AnimatedSection>
+        <section id="about">
+          <AboutSection />
+        </section>
+        <AnimatedSection id="places" animation="scaleUp">
+          <PlacesSection />
+        </AnimatedSection>
+        <section id="team">
+          <TeamSection />
+        </section>
+        <AnimatedSection id="contact" animation="fadeIn">
+          <ContactSection />
+        </AnimatedSection>
       </main>
 
       <Footer />

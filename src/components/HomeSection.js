@@ -13,7 +13,7 @@ const HomeSection = ({ videoRef, scrollToSection }) => {
         preload="auto"
         className="absolute z-0 w-auto min-w-full min-h-full max-w-none object-cover"
       >
-        <source src="/colors.mp4" type="video/mp4" />
+        <source src="/colors2.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
       <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
