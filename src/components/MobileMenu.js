@@ -1,8 +1,35 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
 
 const MobileMenu = ({ isMenuOpen, toggleMenu, sections, activeSection, scrollToSection }) => {
+  const [cursorPosition, setCursorPosition] = useState({
+    left: 0,
+    top: 0,
+    width: 0,
+    opacity: 0,
+  });
+  const [hoveredSection, setHoveredSection] = useState(null);
+
+  const handleMouseEnter = useCallback((e, section) => {
+    const { offsetWidth, offsetLeft, offsetTop } = e.currentTarget;
+    var shift = 35;
+    setCursorPosition({
+      left: offsetLeft + shift,
+      top: offsetTop - 3,
+      width: offsetWidth - 2 * shift,
+      opacity: 1,
+    });
+    setHoveredSection(section);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setCursorPosition((prev) => ({
+      ...prev,
+      opacity: 0,
+    }));
+    setHoveredSection(null);
+  }, []);
+
   return (
     <AnimatePresence>
       {isMenuOpen && (
@@ -19,39 +46,57 @@ const MobileMenu = ({ isMenuOpen, toggleMenu, sections, activeSection, scrollToS
             exit={{ x: "100%" }}
             transition={{ type: "tween", duration: 0.3 }}
           >
-            <div className="flex flex-col h-full justify-between">
+            <div className="relative flex flex-col h-full justify-between">
               <div className="p-4">
-                <div className="flex justify-end">
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={toggleMenu}
-                  >
-                    <X />
-                  </motion.div>
-                </div>
-                <div className="mt-8 space-y-4">
+                <div className="mt-20 space-y-4">
                   {sections.map(section => (
                     <motion.div
                       key={section}
-                      className={`block capitalize text-lg cursor-pointer ${activeSection === section ? 'text-blue-600' : 'text-gray-600'}`}
+                      className={`relative z-10 block capitalize text-lg cursor-pointer transition-all duration-300 ${
+                        hoveredSection === section
+                          ? 'text-white'
+                          : activeSection === section
+                          ? 'text-blue-600 '
+                          : 'text-gray-600'
+                      } 
+                      ${activeSection === section
+                        ? 'font-bold'
+                        : ''}`}
                       whileHover={{ scale: 1.1, originX: 0 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => {
                         scrollToSection(section);
                         toggleMenu();
                       }}
+                      onMouseEnter={(e) => handleMouseEnter(e, section)}
+                      onMouseLeave={handleMouseLeave}
                     >
                       {section}
                     </motion.div>
                   ))}
                 </div>
               </div>
+              <Cursor position={cursorPosition} />
             </div>
           </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
+  );
+};
+
+const Cursor = ({ position }) => {
+  return (
+    <motion.div
+      animate={{
+        left: position.left,
+        top: position.top,
+        width: position.width,
+        opacity: position.opacity,
+      }}
+      className="absolute z-0"
+      style={{ borderRadius: '15px', height: '35px', backgroundColor: 'black' }}
+    />
   );
 };
 

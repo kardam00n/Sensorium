@@ -17,6 +17,7 @@ const SensoriumWebsite = () => {
   const [activePost, setActivePost] = useState(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isAtTop, setIsAtTop] = useState(true);
+  
   const videoRef = useRef(null);
 
   const sections = ['home', 'posts', 'about', 'places', 'team', 'contact'];
@@ -94,6 +95,17 @@ const SensoriumWebsite = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const openPost = (post) => {
@@ -130,6 +142,7 @@ const SensoriumWebsite = () => {
         isMenuOpen={isMenuOpen}
         scrollProgress={scrollProgress}
         isAtTop={isAtTop}
+        setIsMenuOpen={setIsMenuOpen}
       />
       
       <MobileMenu 
