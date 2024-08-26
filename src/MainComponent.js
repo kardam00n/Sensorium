@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Navbar from './components/Navbar';
 import MobileMenu from './components/MobileMenu';
 import HomeSection from './components/HomeSection';
@@ -20,7 +20,7 @@ const SensoriumWebsite = () => {
   
   const videoRef = useRef(null);
 
-  const sections = ['home', 'posts', 'about', 'places', 'team', 'contact'];
+  const sections = useMemo(() => ['home', 'posts', 'about', 'places', 'team', 'contact'], []);
 
   const posts = [
     { 
@@ -138,7 +138,6 @@ const SensoriumWebsite = () => {
         activeSection={activeSection} 
         sections={sections} 
         scrollToSection={scrollToSection} 
-        toggleMenu={toggleMenu} 
         isMenuOpen={isMenuOpen}
         scrollProgress={scrollProgress}
         isAtTop={isAtTop}

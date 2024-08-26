@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MobileMenu = ({ isMenuOpen, toggleMenu, sections, activeSection, scrollToSection }) => {
@@ -29,6 +29,15 @@ const MobileMenu = ({ isMenuOpen, toggleMenu, sections, activeSection, scrollToS
     }));
     setHoveredSection(null);
   }, []);
+
+  useEffect(() => {
+    // do mobilnego urządzenia potrzebne
+    setCursorPosition((prev) => ({
+      ...prev,
+      opacity: 0,
+    }));
+    setHoveredSection(null);
+  }, [activeSection]);
 
   return (
     <AnimatePresence>

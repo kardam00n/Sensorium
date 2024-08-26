@@ -4,15 +4,18 @@
 // usunięcie sekcji z navbara, przy pojawianiu się MobileMenu - wcześniej było hidden, a to chyba nie jest za wydajne xD
 // przy zmniejszaniu strony pojawia się navbar, a mobilne menu znika - wcześniej to nie działało
 // dodane hamburger menu z animacją
+// ogarnięcie podświetlania na mobilnym
+// dodanie useMemo do MainComponent - sections, bo wywalało warrning
+// zmiana wysokości navbara przy mobilnym
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSpring, animated } from 'react-spring';
 import { Squash as Hamburger } from 'hamburger-react'; // npm install hamburger-react wymagane
 
-const Navbar = ({ activeSection, sections, scrollToSection, toggleMenu, isMenuOpen, setIsMenuOpen, scrollProgress }) => {
+const Navbar = ({ activeSection, sections, scrollToSection, isMenuOpen, setIsMenuOpen, scrollProgress }) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navRef = useRef(null);
   const [cursorPosition, setCursorPosition] = useState({
     left: 0,
@@ -46,6 +49,19 @@ const Navbar = ({ activeSection, sections, scrollToSection, toggleMenu, isMenuOp
     }
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobile(false);
+      } else {
+        setIsMobile(true);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <motion.nav 
       ref={navRef}
@@ -55,7 +71,7 @@ const Navbar = ({ activeSection, sections, scrollToSection, toggleMenu, isMenuOp
       variants={navbarVariants}
       transition={{ duration: 0.3 }}
     >
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center relative">
+      <div className={`container mx-auto px-4 ${isMobile ? 'py-2' : 'py-4'} flex justify-between items-center relative`}>
         <motion.div 
           className={`font-bold cursor-pointer transition-all duration-300 ${
             isScrolled ? 'text-gray-900 text-2xl' : 'text-white text-4xl'
