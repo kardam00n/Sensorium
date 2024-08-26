@@ -9,7 +9,7 @@ import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import PostModal from './components/PostModal';
 import AnimatedSection from './components/AnimatedSection';
-import AboutSection from './components/AboutSection';
+import AboutSection from './components/about_section/AboutSection';
 
 const SensoriumWebsite = () => {
   const [activeSection, setActiveSection] = useState('home');
