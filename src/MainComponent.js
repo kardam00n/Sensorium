@@ -169,15 +169,15 @@ const SensoriumWebsite = () => {
         <section id="about">
           <AboutSection />
         </section>
-        <AnimatedSection id="places" animation="scaleUp">
+        <section id="places">
           <PlacesSection />
-        </AnimatedSection>
+        </section>
         <section id="team">
           <TeamSection />
         </section>
-        <AnimatedSection id="contact" animation="fadeIn">
+        <section id="contact">
           <ContactSection />
-        </AnimatedSection>
+        </section>
       </main>
 
       <Footer />
