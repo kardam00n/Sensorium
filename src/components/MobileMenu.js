@@ -1,7 +1,13 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useCallback, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const MobileMenu = ({ isMenuOpen, toggleMenu, sections, activeSection, scrollToSection }) => {
+const MobileMenu = ({
+  isMenuOpen,
+  toggleMenu,
+  sections,
+  activeSection,
+  scrollToSection,
+}) => {
   const [cursorPosition, setCursorPosition] = useState({
     left: 0,
     top: 0,
@@ -58,15 +64,15 @@ const MobileMenu = ({ isMenuOpen, toggleMenu, sections, activeSection, scrollToS
             <div className="relative flex flex-col h-full justify-between">
               <div className="p-4">
                 <div className="mt-20 space-y-4">
-                  {sections.map(section => (
+                  {sections.map((section) => (
                     <motion.div
                       key={section}
                       className={`relative z-10 block capitalize text-lg cursor-pointer transition-all duration-300 ${
                         activeSection === section
-                          ? 'text-blue-600 font-bold'
+                          ? "orange font-bold"
                           : hoveredSection === section
-                            ? 'text-black'
-                            : 'text-white'
+                          ? "text-black"
+                          : "text-white"
                       }`}
                       whileHover={{ scale: 1.1, originX: 0 }}
                       whileTap={{ scale: 0.9 }}
@@ -77,10 +83,20 @@ const MobileMenu = ({ isMenuOpen, toggleMenu, sections, activeSection, scrollToS
                       onMouseEnter={(e) => handleMouseEnter(e, section)}
                       onMouseLeave={handleMouseLeave}
                     >
-                      {section}  {/* Wyświetlanie nazwy sekcji lub zawartości */}
+                      {section === "home"
+                        ? "Strona Główna"
+                        : section === "posts"
+                        ? "Projekty"
+                        : section === "places"
+                        ? "Miejsca"
+                        : section === "team"
+                        ? "Zespół"
+                        : section === "contact"
+                        ? "Kontakt"
+                        : section}{" "}
+                      {/* Wyświetlanie nazwy sekcji lub zawartości */}
                     </motion.div>
                   ))}
-
                 </div>
               </div>
               <Cursor position={cursorPosition} />
@@ -102,7 +118,7 @@ const Cursor = ({ position }) => {
         opacity: position.opacity,
       }}
       className="absolute z-0"
-      style={{ borderRadius: '15px', height: '35px', backgroundColor: 'white' }}
+      style={{ borderRadius: "15px", height: "35px", backgroundColor: "white" }}
     />
   );
 };
