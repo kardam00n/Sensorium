@@ -1,13 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const AnimatedButton = () => {
+const AnimatedButton = ( { isInView }) => {
   return (
     <motion.div
       className="flex justify-center mt-10"
       initial={{ opacity: 0, y: 100 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 2, ease: "easeOut", delay: 2 }}
+      animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 100 }}
+      transition={{ duration: 2, ease: "easeOut", delay: isInView ? 2 : 0 }}
     >
       <motion.button
         whileHover={{ scale: 1.05, backgroundColor: "#FFCCAA", color: "#000000" }}

@@ -130,7 +130,7 @@ const AboutSection = () => {
         
       </motion.div>
 
-      <AnimatedButton />
+      <AnimatedButton isInView={isInView} />
 
     </section>
   );
