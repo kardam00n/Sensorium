@@ -49,7 +49,7 @@ const MobileMenu = ({ isMenuOpen, toggleMenu, sections, activeSection, scrollToS
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-xl z-50"
+            className="fixed inset-y-0 right-0 max-w-xs w-full bg-black shadow-xl z-50"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -62,15 +62,12 @@ const MobileMenu = ({ isMenuOpen, toggleMenu, sections, activeSection, scrollToS
                     <motion.div
                       key={section}
                       className={`relative z-10 block capitalize text-lg cursor-pointer transition-all duration-300 ${
-                        hoveredSection === section
-                          ? 'text-white'
-                          : activeSection === section
-                          ? 'text-blue-600 '
-                          : 'text-gray-600'
-                      } 
-                      ${activeSection === section
-                        ? 'font-bold'
-                        : ''}`}
+                        activeSection === section
+                          ? 'text-blue-600 font-bold'
+                          : hoveredSection === section
+                            ? 'text-black'
+                            : 'text-white'
+                      }`}
                       whileHover={{ scale: 1.1, originX: 0 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => {
@@ -80,9 +77,10 @@ const MobileMenu = ({ isMenuOpen, toggleMenu, sections, activeSection, scrollToS
                       onMouseEnter={(e) => handleMouseEnter(e, section)}
                       onMouseLeave={handleMouseLeave}
                     >
-                      {section}
+                      {section}  {/* Wyświetlanie nazwy sekcji lub zawartości */}
                     </motion.div>
                   ))}
+
                 </div>
               </div>
               <Cursor position={cursorPosition} />
@@ -104,7 +102,7 @@ const Cursor = ({ position }) => {
         opacity: position.opacity,
       }}
       className="absolute z-0"
-      style={{ borderRadius: '15px', height: '35px', backgroundColor: 'black' }}
+      style={{ borderRadius: '15px', height: '35px', backgroundColor: 'white' }}
     />
   );
 };

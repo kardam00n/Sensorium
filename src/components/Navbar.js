@@ -40,11 +40,11 @@ const Navbar = ({ activeSection, sections, scrollToSection, isMenuOpen, setIsMen
 
   const navbarVariants = {
     transparent: {
-      backgroundColor: "rgba(255, 255, 255, 0)",
+      backgroundColor: "transparent",
       boxShadow: "0 0 0 rgba(0, 0, 0, 0)"
     },
     solid: {
-      backgroundColor: "rgba(255, 255, 255, 0.9)",
+      backgroundColor: "rgba(0, 0, 0, 0.9)",
       boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
     }
   };
@@ -74,7 +74,7 @@ const Navbar = ({ activeSection, sections, scrollToSection, isMenuOpen, setIsMen
       <div className={`container mx-auto px-4 ${isMobile ? 'py-2' : 'py-4'} flex justify-between items-center relative`}>
         <motion.div 
           className={`font-bold cursor-pointer transition-all duration-300 ${
-            isScrolled ? 'text-gray-900 text-2xl' : 'text-white text-4xl'
+            isScrolled ? 'text-white text-2xl' : 'text-white text-4xl'
           }`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -116,21 +116,21 @@ const Navbar = ({ activeSection, sections, scrollToSection, isMenuOpen, setIsMen
               toggled={isMenuOpen} 
               toggle={setIsMenuOpen} 
               size={20}
-              color={isMenuOpen ? 'black' : 'currentColor'} 
+              color={'white'} 
             />
         </motion.div>
       </div>
       <AnimatePresence>
         {isScrolled && (
           <motion.div 
-            className="w-full h-1 bg-gray-200"
+            className="w-full h-1 bg-black-200"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
             <animated.div 
-              className="h-full bg-black"
+              className="h-full bg-white"
               style={springProps}
             />
           </motion.div>
@@ -168,14 +168,13 @@ const Tab = ({ section, activeSection, isScrolled, scrollToSection, setCursorPos
         setIsHovered(false);
       }}
       className={`relative z-10 capitalize cursor-pointer transition-all duration-300 ${
-        isScrolled
-          ? activeSection === section
-            ? 'text-blue-600 font-bold text-base'
-            : 'text-gray-600 text-base'
-          : activeSection === section
-          ? 'text-white font-bold text-xl'
-          : 'text-gray-200 text-xl'
-      } ${isHovered ? 'text-white' : ''}`}
+        activeSection === section
+          ? 'text-blue-600 font-bold text-base'
+          : isHovered 
+            ? 'text-black text-base'
+            : 'text-white text-base'
+      }`}
+      
       onClick={() => scrollToSection(section)}
     >
       {section === 'home' ? 'Home' :
@@ -196,7 +195,7 @@ const Cursor = ({ position }) => {
         width: position.width,
         opacity: position.opacity,
       }}
-      className="absolute bottom-0 h-10 bg-black z-0"
+      className="absolute bottom-0 h-10 bg-white z-0"
       style={{ borderRadius: '15px'}}
     />
   );

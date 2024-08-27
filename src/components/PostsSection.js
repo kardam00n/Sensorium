@@ -1,6 +1,7 @@
 import React, { useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import "../darkMode.css";
 
 const PostsSection = ({ posts, openPost }) => {
   const containerVariants = {
@@ -15,19 +16,19 @@ const PostsSection = ({ posts, openPost }) => {
 
   if (!Array.isArray(posts) || posts.length === 0) {
     return (
-      <section id="posts" className="py-20 bg-gradient-to-b from-blue-50 to-purple-50">
+      <section id="posts" className="py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark-mode">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-12 text-center text-gray-800">Najnowsze posty</h2>
-          <p className="text-center text-gray-600">Brak dostępnych postów.</p>
+          <h2 className="text-4xl font-bold mb-12 text-center">Najnowsze posty</h2>
+          <p className="text-center ">Brak dostępnych postów.</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section id="posts" className="py-20 bg-gradient-to-b from-blue-50 to-purple-50">
+    <section id="posts" className="py-20 dark-mode">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold mb-12 text-center text-gray-800">Najnowsze posty</h2>
+        <h2 className="text-7xl md:text-8xl font-bold mb-24 text-center ">Projekty</h2>
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
           variants={containerVariants}
@@ -136,8 +137,8 @@ const PostItem = ({ post, index, openPost, isRight }) => {
         </div>
       </div>
       <div className="text-left">
-        <h3 className="text-lg font-bold mb-1 text-gray-800">{post.title}</h3>
-        <p className="text-sm text-gray-600">{post.excerpt}</p>
+        <h3 className="text-lg font-bold mb-1">{post.title}</h3>
+        <p className="text-sm">{post.excerpt}</p>
       </div>
     </motion.div>
   );
