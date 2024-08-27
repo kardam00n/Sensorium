@@ -48,7 +48,7 @@ const KeywordBlock = ({
         gridTemplateColumns: windowWidth > 768 ? '1fr auto 1fr' : '1fr',
         gridTemplateRows: windowWidth > 768 ? '1fr' : '1fr auto 1fr',
         alignItems: 'center',
-        padding: 10,
+        padding: "0.5vh",
       }}
     >
       <motion.div

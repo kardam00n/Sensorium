@@ -40,7 +40,7 @@ const ListBlock = ({
                 gridRow: isVertical ? '3' : '1',
                 textAlign: isVertical ? 'left' : gridColumn === '1' ? 'left' : 'right',
                 alignSelf: 'center',
-                fontSize: isVertical ? '2.8vw' : '1.1vw',
+                // fontSize: isVertical ? '2.8vw' : '1.1vw',
             }}
             animate={listAnimateControl}
         >
@@ -48,7 +48,7 @@ const ListBlock = ({
                 {listItems.map((item, index) => (
                     <motion.li
                         key={index}
-                        className="list-item"
+                        className="list-item text-1xl"
                         initial="initial"
                         whileHover="hover"
                         animate={{ opacity: listAnimateControl ? 1 : 0 }}

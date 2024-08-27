@@ -92,7 +92,7 @@ const AboutSection = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        padding: "5vh 5%",
+        // padding: "5vh 5%",
         color: "#ffffff",
         backgroundColor: "#000000",
         fontFamily: "'Helvetica Neue', sans-serif",

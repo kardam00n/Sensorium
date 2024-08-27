@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const Heading = ({ isInView }) => {
   return (
     <motion.h2
-      className="text-4xl font-bold mb-5"
+      className="text-7xl md:text-9xl mb-6 inline-block font-bold"
       initial={{ opacity: 0, y: -100 }}
       animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : -50 }}
       transition={{ duration: 3, ease: "easeOut" }}
