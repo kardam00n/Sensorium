@@ -53,6 +53,18 @@ const PlacesSection = () => {
     controls.start('visible');
   }, [controls]);
 
+  // Add this effect to manage body overflow
+  useEffect(() => {
+    if (expandedCard) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [expandedCard]);
+
   return (
     <section id="places" className="py-20 bg-black text-white">
       <div className="container mx-auto px-4">
@@ -108,17 +120,6 @@ const LocationCard = ({ title, description, fullDescription, details, imageSrc, 
     hover: { scale: 1.03, y: -10 },
     expanded: { opacity: 1, scale: 1, transition: { duration: 0.3 } }
   };
-
-  useEffect(() => {
-    if (isExpanded) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isExpanded]);
 
   return (
     <AnimatePresence>
