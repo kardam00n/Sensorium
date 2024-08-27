@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const AnimatedButton = ( { isInView }) => {
+const AnimatedButton = ({ isInView }) => {
   return (
     <motion.div
       className="flex justify-center mt-10"
