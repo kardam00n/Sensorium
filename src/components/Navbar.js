@@ -169,7 +169,7 @@ const Tab = ({ section, activeSection, isScrolled, scrollToSection, setCursorPos
     >
       {section === 'home' ? 'Strona Główna' :
        section === 'posts' ? 'Projekty' :
-       section === "about"  ? "O nas":
+       section === "about"  ? "O projekcie":
        section === 'places' ? 'Miejsca' :
        section === 'team' ? 'Zespół' :
        section === 'contact' ? 'Kontakt' : section}

@@ -22,7 +22,7 @@ const SensoriumWebsite = () => {
   
   const videoRef = useRef(null);
 
-  const sections = useMemo(() => ['home', 'posts', 'about', 'places','team','contact'], []);
+  const sections = useMemo(() => ['home','about', 'posts', 'team', 'places','contact'], []);
 
   const posts = [
     { 
@@ -163,17 +163,17 @@ const SensoriumWebsite = () => {
         <AnimatedSection id="home" animation="fadeIn">
           <HomeSection videoRef={videoRef} scrollToSection={scrollToSection} />
         </AnimatedSection>
-        <AnimatedSection id="posts" animation="slideUp">
-          <PostsSection posts={posts} openPost={openPost} />
-        </AnimatedSection>
         <section id="about">
           <AboutSection />
         </section>
-        <section id="places">
-          <PlacesSection />
-        </section>
+        <AnimatedSection id="posts" animation="slideUp">
+          <PostsSection posts={posts} openPost={openPost} />
+        </AnimatedSection>
         <section id="team">
           <TeamSection />
+        </section>
+        <section id="places">
+          <PlacesSection />
         </section>
         <section id="contact">
           <ContactSection />
