@@ -109,6 +109,17 @@ const LocationCard = ({ title, description, fullDescription, details, imageSrc, 
     expanded: { opacity: 1, scale: 1, transition: { duration: 0.3 } }
   };
 
+  useEffect(() => {
+    if (isExpanded) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isExpanded]);
+
   return (
     <AnimatePresence>
       <motion.div
