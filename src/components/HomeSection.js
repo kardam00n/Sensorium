@@ -169,7 +169,7 @@ const BackgroundLines = ({ opacity, scrollProgress }) => {
   );
 };
 
-const HomeSection = () => {
+const HomeSection = ({videoRef, scrollToSection}) => {
   const titleControls = useAnimation();
   const { scrollYProgress } = useScroll();
   const backgroundOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
@@ -266,7 +266,7 @@ const HomeSection = () => {
       </div>
       </div>
       {!hasScrolled && (
-        <ArrowDown className={`text-white animate-bounce ${hasScrolled ? 'fade-out' : 'fade-in'}`} style={{
+        <ArrowDown className={`text-white animate-bounce ${hasScrolled ? 'fade-out' : 'fade-in'}`} onClick={() => scrollToSection('about')} style={{
           position: "absolute",
           left: "50%",
           bottom: "4rem",
@@ -274,6 +274,7 @@ const HomeSection = () => {
           width: "2rem",
           height: "2rem",
           color: "white",
+          cursor: "pointer",
           opacity: 0.8
         }}/>
       )}
