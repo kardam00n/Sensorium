@@ -127,7 +127,7 @@ const AboutSection = () => {
 
       </motion.div>
 
-      <AnimatedButton isInView={isInView} />
+      {/* <AnimatedButton isInView={isInView} /> */}
 
     </section>
   );

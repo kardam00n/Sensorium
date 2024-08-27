@@ -54,7 +54,7 @@ const KeywordBlock = ({
       <motion.div
         style={{
           ...keywordStyle,
-          fontSize: windowWidth > 768 ? '4vw' : '8vw',
+          fontSize: windowWidth > 768 ? '4vw' : '10vw',
           gridColumn: windowWidth > 768 ? gridColumn : '1',
           gridRow: '1',
           textAlign: windowWidth > 768 ? gridColumn === '1' ? 'right' : 'center' : 'center',
