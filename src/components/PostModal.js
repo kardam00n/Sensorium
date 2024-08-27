@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowDown } from 'lucide-react';
 
 const PhotoItem = ({ imgSrc, index }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px 0px" });
+  const isInView = useInView(ref, { once: true, margin: "400px 0px" });
 
   return (
     <motion.div
