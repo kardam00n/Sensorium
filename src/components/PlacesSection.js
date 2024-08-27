@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, useAnimation} from 'framer-motion';
+import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 
 const PlacesSection = () => {
   const [expandedCard, setExpandedCard] = useState(null);
@@ -54,12 +54,12 @@ const PlacesSection = () => {
   }, [controls]);
 
   return (
-    <section id="places" className="py-40 bg-black text-white relative">
+    <section id="places" className="py-40 bg-black text-white">
       <div className="container mx-auto px-8">
         <div className="text-center mb-40">
           <motion.h2
             ref={textRef}
-            className="text-9xl mb-6 inline-block font-bold"
+            className="text-9xl mb-6 inline-block font-bold font-sans-serif"        
             variants={headingVariants}
             animate={controls}
           >
@@ -67,7 +67,7 @@ const PlacesSection = () => {
           </motion.h2>
         </div>
 
-        <div className="flex flex-col space-y-16 relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 relative">
           <LocationCard
             title="Sensorium_artlab"
             description="Galeria sztuki, w której prezentowane będą prace z nurtu art&science, dwóch pozornie różnych światów, które jednak doskonale współpracują, dając zaskakujące, nowatorskie projekty."
@@ -110,77 +110,78 @@ const LocationCard = ({ title, description, fullDescription, details, imageSrc, 
   };
 
   return (
-    <motion.div
-  layout
-  variants={containerVariants}
-  initial="hidden"
-  animate={isExpanded ? "expanded" : "visible"}
-  whileHover={isExpanded ? {} : "hover"}
-  transition={{ duration: 0.3 }}
-  onClick={onClick}
-  className={`
-    rounded-xl overflow-hidden flex flex-col transition-all duration-300 cursor-pointer
-    ${isExpanded
-      ? 'fixed inset-0 z-50 m-auto w-[90vw] h-[90vh] max-w-6xl max-h-[90vh]'
-      : 'relative border-2'
-    }
-  `}
-  style={{
-    backgroundColor: '#1c1c1c',
-    borderColor: isExpanded ? 'transparent' : '#1c1c1c',
-  }}
->
-  <motion.div
-    layout
-    className={`relative ${isExpanded ? 'h-[60%]' : 'h-[600px]'}`}
-  >
-    <img src={imageSrc} alt={title} className="w-full h-full object-cover" />
-    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-      <h3 className="text-5xl lg:text-7xl font-semibold text-white text-center px-6">{title}</h3>
-    </div>
-  </motion.div>
-  <motion.div
-    layout
-    className={`p-6 flex-grow flex flex-col ${isExpanded ? 'overflow-y-auto' : ''}`}
-  >
-    <p className="text-gray-200 text-xl mb-4 flex-grow">
-      {isExpanded ? fullDescription : description}
-    </p>
-    {isExpanded && (
+    <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="space-y-2 mt-auto"
+        layout
+        variants={containerVariants}
+        initial="hidden"
+        animate={isExpanded ? "expanded" : "visible"}
+        whileHover={isExpanded ? {} : "hover"}
+        transition={{ duration: 0.3 }}
+        onClick={onClick}
+        className={`
+          rounded-xl overflow-hidden flex flex-col transition-all duration-300 cursor-pointer
+          ${isExpanded
+            ? 'fixed inset-0 z-50 m-auto w-[90vw] h-[90vh] max-w-6xl max-h-[90vh]'
+            : 'relative border-2'
+          }
+        `}
+        style={{
+          backgroundColor: '#1c1c1c',
+          borderColor: isExpanded ? 'transparent' : '#1c1c1c',
+        }}
       >
-        {Array.isArray(details) &&
-          details.map((detail, index) => (
-            <p key={index} className="text-gray-200 text-xl">
-              {detail.label && (
-                <span className="font-semibold">{detail.label}:{' '}</span>
-              )}
-              {detail.isLink ? (
-                <a href={detail.value} className="text-blue-400 hover:underline">
-                  {detail.value}
-                </a>
-              ) : (
-                detail.value
-              )}
-            </p>
-          ))}
+        <motion.div
+          layout
+          className={`relative ${isExpanded ? 'h-[60%]' : 'h-[400px]'}`}
+        >
+          <img src={imageSrc} alt={title} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex items-end justify-start p-6">
+            <h3 className="text-4xl lg:text-5xl font-bold text-white">{title}</h3>
+          </div>
+        </motion.div>
+        <motion.div
+          layout
+          className={`p-6 flex-grow flex flex-col ${isExpanded ? 'overflow-y-auto' : ''}`}
+        >
+          <p className="text-gray-200 text-lg mb-4 flex-grow">
+            {isExpanded ? fullDescription : description}
+          </p>
+          {isExpanded && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="space-y-2 mt-auto"
+            >
+              {Array.isArray(details) &&
+                details.map((detail, index) => (
+                  <p key={index} className="text-gray-200 text-lg">
+                    {detail.label && (
+                      <span className="font-semibold">{detail.label}:{' '}</span>
+                    )}
+                    {detail.isLink ? (
+                      <a href={detail.value} className="text-blue-400 hover:underline">
+                        {detail.value}
+                      </a>
+                    ) : (
+                      detail.value
+                    )}
+                  </p>
+                ))}
+            </motion.div>
+          )}
+        </motion.div>
+        {isExpanded && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onClick(); }}
+            className="absolute top-4 right-4 text-white text-4xl"
+          >
+            &times;
+          </button>
+        )}
       </motion.div>
-    )}
-  </motion.div>
-  {isExpanded && (
-    <button
-      onClick={(e) => { e.stopPropagation(); onClick(); }}
-      className="absolute top-4 right-4 text-white text-4xl"
-    >
-      &times;
-    </button>
-  )}
-</motion.div>
-
+    </AnimatePresence>
   );
 };
 
