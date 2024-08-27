@@ -1,17 +1,7 @@
-// dodanie cursora w postaci animacji czarnego prostokąta, a napis w nim na biało 
-// to samo dla MobileMenu
-// usunięcie jednego 'iksa', bo były dwa
-// usunięcie sekcji z navbara, przy pojawianiu się MobileMenu - wcześniej było hidden, a to chyba nie jest za wydajne xD
-// przy zmniejszaniu strony pojawia się navbar, a mobilne menu znika - wcześniej to nie działało
-// dodane hamburger menu z animacją
-// ogarnięcie podświetlania na mobilnym
-// dodanie useMemo do MainComponent - sections, bo wywalało warrning
-// zmiana wysokości navbara przy mobilnym
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSpring, animated } from 'react-spring';
-import { Squash as Hamburger } from 'hamburger-react'; // npm install hamburger-react wymagane
+import { Squash as Hamburger } from 'hamburger-react'; 
 
 const Navbar = ({ activeSection, sections, scrollToSection, isMenuOpen, setIsMenuOpen, scrollProgress }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -178,10 +168,10 @@ const Tab = ({ section, activeSection, isScrolled, scrollToSection, setCursorPos
       onClick={() => scrollToSection(section)}
     >
       {section === 'home' ? 'Home' :
-       section === 'posts' ? 'Posty' :
-       section === 'places' ? 'Miejsca' :
-       section === 'team' ? 'Zespół' :
-       section === 'contact' ? 'Kontakt' : section}
+       section === 'posts' ? 'Posts' :
+       section === 'places' ? 'Places' :
+       section === 'team' ? 'Team' :
+       section === 'contact' ? 'Contact' : section}
     </li>
   );
 };
