@@ -159,7 +159,7 @@ const Tab = ({ section, activeSection, isScrolled, scrollToSection, setCursorPos
       }}
       className={`relative z-10 capitalize cursor-pointer transition-all duration-300 ${
         activeSection === section
-          ? 'text-blue-600 font-bold text-base'
+          ? 'orange font-bold text-base'
           : isHovered 
             ? 'text-black text-base'
             : 'text-white text-base'
@@ -167,11 +167,11 @@ const Tab = ({ section, activeSection, isScrolled, scrollToSection, setCursorPos
       
       onClick={() => scrollToSection(section)}
     >
-      {section === 'home' ? 'Home' :
-       section === 'posts' ? 'Posts' :
-       section === 'places' ? 'Places' :
-       section === 'team' ? 'Team' :
-       section === 'contact' ? 'Contact' : section}
+      {section === 'home' ? 'Strona Główna' :
+       section === 'posts' ? 'Projekty' :
+       section === 'places' ? 'Miejsca' :
+       section === 'team' ? 'Zespół' :
+       section === 'contact' ? 'Kontakt' : section}
     </li>
   );
 };
