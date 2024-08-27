@@ -1,125 +1,154 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
-const TeamSection = ({ backgroundImage = '/bg4.jpg' }) => {
-  const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-  const y = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], ["20%", "0%", "0%", "-20%"]);
+const TeamSection = () => {
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [direction, setDirection] = useState(0);
 
   const teamMembers = [
     {
       id: 1,
-      name: 'Prof. Alicja Panasiewicz',
-      role: 'Profesor sztuki, Artystka wizualna',
-      image: '/person1.jpg',
-      description: 'Absolwentka ASP w Krakowie, specjalizuje się w instalacjach multimedialnych. Wykładowca na UP w Krakowie, organizatorka targów "Nówka Sztuka".',
-      bgColor: 'from-orange-400/30 to-orange-400/10',
-      textColor: 'text-orange-100'
+      name: "Prof. Alicja Panasiewicz",
+      role: "Profesor sztuki, Artystka wizualna",
+      image: "/osoba_1.png",
+      description:
+        'Absolwentka ASP w Krakowie, specjalizuje się w instalacjach multimedialnych. Wykładowca na UP w Krakowie, organizatorka targów "Nówka Sztuka".',
     },
     {
       id: 2,
-      name: 'Prof. Aleksander Byrski',
-      role: 'Profesor nauk informatycznych',
-      image: '/person2.jpg',
-      description: 'Zastępca Dziekana ds. Współpracy na Wydziale Informatyki AGH. Specjalista w obliczeniach metaheurystycznych i systemach agentowych.',
-      bgColor: 'from-teal-500/30 to-teal-500/10',
-      textColor: 'text-teal-100'
+      name: "Prof. Aleksander Byrski",
+      role: "Profesor nauk informatycznych",
+      image: "/osoba_2.png",
+      description:
+        "Zastępca Dziekana ds. Współpracy na Wydziale Informatyki AGH. Specjalista w obliczeniach metaheurystycznych i systemach agentowych.",
     },
     {
       id: 3,
-      name: 'Prof. Jacek Wachowski',
-      role: 'Profesor nauk humanistycznych',
-      image: '/person3.jpg',
-      description: 'Profesor w Katedrze Teatru i Sztuki Mediów UAM. Specjalista w performatyce i komunikacji społecznej.',
-      bgColor: 'from-blue-600/30 to-blue-600/10',
-      textColor: 'text-blue-100'
+      name: "Prof. Jacek Wachowski",
+      role: "Profesor nauk humanistycznych",
+      image: "/osoba_3.png",
+      description:
+        "Profesor w Katedrze Teatru i Sztuki Mediów UAM. Specjalista w performatyce i komunikacji społecznej.",
     },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3
+  const handleMemberClick = (member) => {
+    setDirection(selectedMember && selectedMember.id < member.id ? 1 : -1);
+    setTimeout(() => {
+      if (selectedMember && selectedMember.id === member.id) {
+        setSelectedMember(null);
+        return;
       }
-    }
+      setSelectedMember(member);
+    }, 50);
   };
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
+  const waveVariants = {
+    enter: (direction) => ({
+      scale: 0.8,
+      y: direction > 0 ? 100 : -100,
+      opacity: 0,
+    }),
+    center: {
+      scale: 1,
       y: 0,
+      opacity: 1,
       transition: {
-        duration: 0.5,
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
       },
     },
+    exit: (direction) => ({
+      scale: 0.8,
+      y: direction > 0 ? -100 : 100,
+      opacity: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+      },
+    }),
   };
 
   return (
-    <motion.section 
-      ref={sectionRef}
-      id="team" 
-      className="relative py-20 overflow-hidden"
-      style={{ 
-        minHeight: "100vh",
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}
-    >
-      <div className="absolute inset-0 bg-black opacity-50" />
-      <motion.div 
-        className="relative z-10 container mx-auto px-4"
-        style={{ opacity, y }}
-      >
-        <h2 className="text-4xl font-bold mb-16 text-center text-white">Nasz Zespół</h2>
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-12"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {teamMembers.map((member) => (
-            <motion.div
-              key={member.id}
-              variants={cardVariants}
-              className={`bg-gradient-to-br ${member.bgColor} rounded-lg overflow-hidden flex flex-col h-full shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm backdrop-filter`}
-              whileHover={{ scale: 1.05 }}
-              style={{
-                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-                backdropFilter: 'blur(5px)',
-                WebkitBackdropFilter: 'blur(5px)',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-              }}
-            >
-              <motion.div 
-                className="w-48 h-48 mx-auto mt-8 mb-6 overflow-hidden rounded-full"
-                whileHover={{ scale: 1.1 }}
-              >
-                <img 
-                  src={member.image} 
-                  alt={member.name} 
-                  className="w-full h-full object-cover"
+    <section id="team" className="py-20">
+      <div className="container mx-auto px-4">
+        <h2 className="text-4xl font-bold mb-16 text-center text-gray-800">
+          Nasz Zespół
+        </h2>
+        <div className="flex flex-col md:flex-row gap-12">
+          {/* Left side - Image */}
+          <div
+            className="w-full md:w-1/2 relative overflow-hidden rounded-lg"
+            style={{ height: "450px" }} // Adjusted height
+          >
+            <div className="w-full h-full" style={{ perspective: "1000px" }}>
+              <AnimatePresence initial={false} custom={direction}>
+                <motion.img
+                  key={selectedMember ? selectedMember.id : "placeholder"}
+                  src={
+                    selectedMember ? selectedMember.image : "/placeholder.png"
+                  }
+                  alt={
+                    selectedMember
+                      ? selectedMember.name
+                      : "Select a team member"
+                  }
+                  className="w-full h-full object-contain absolute top-0 left-0"
+                  variants={waveVariants}
+                  custom={direction}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  style={{
+                    transformOrigin: "center center",
+                    filter: "grayscale(100%)",
+                  }}
                 />
-              </motion.div>
-              <div className="px-6 pb-6 text-center">
-                <h3 className={`text-2xl font-semibold mb-2 ${member.textColor}`}>{member.name}</h3>
-                <p className={`text-lg font-medium ${member.textColor} opacity-90 mb-4`}>{member.role}</p>
-                <p className={`${member.textColor} text-sm opacity-80`}>{member.description}</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
-    </motion.section>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Right side - Names and Info */}
+          <div className="w-full md:w-1/2">
+            <ul className="space-y-4">
+              {teamMembers.map((member) => (
+                <li key={member.id}>
+                  <button
+                    onClick={() => handleMemberClick(member)}
+                    className={`text-left w-full p-4 rounded-lg transition-all ${
+                      selectedMember && selectedMember.id === member.id
+                        ? "bg-blue-100 text-blue-800"
+                        : "hover:bg-gray-100"
+                    }`}
+                  >
+                    <div className="flex flex-start items-center">
+                      {selectedMember && selectedMember.id === member.id ? (<FaChevronUp />) : (<FaChevronDown /> )}
+                      <h3 className="text-xl font-semibold pl-6">{member.name}</h3>
+                    </div>
+                    {selectedMember && selectedMember.id === member.id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <p className="text-gray-600 mt-2">{member.role}</p>
+                        <p className="text-gray-700 mt-2">
+                          {member.description}
+                        </p>
+                      </motion.div>
+                    )}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
