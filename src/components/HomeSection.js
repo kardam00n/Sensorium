@@ -12,8 +12,23 @@ const Card = ({ title, description, imageUrl, index }) => {
     target: cardRef,
     offset: ["start end", "end start"]
   });
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   const springConfig = { stiffness: 100, damping: 30, restDelta: 0.00001 };
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setHasScrolled(true);
+      } else {
+        setHasScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const x = useSpring(
     useTransform(
@@ -158,6 +173,7 @@ const HomeSection = () => {
   const titleControls = useAnimation();
   const { scrollYProgress } = useScroll();
   const backgroundOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
     titleControls.start({
@@ -168,7 +184,21 @@ const HomeSection = () => {
     const unsubscribe = scrollYProgress.onChange((value) => {
       console.log('Scroll progress:', value);
     });
-    return () => unsubscribe();
+
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setHasScrolled(true);
+      } else {
+        setHasScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [titleControls, scrollYProgress]);
 
   const letterVariants = {
@@ -196,7 +226,7 @@ const HomeSection = () => {
       <motion.div className="min-h-screen flex flex-col items-center justify-center relative">
         <BackgroundLines opacity={backgroundOpacity} scrollProgress={scrollYProgress} />
         <motion.h1 
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-center leading-none tracking-tighter relative z-10 mb-8 px-4"
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-center leading-none tracking-tighter relative z-10 mb-8 px-4"
           initial={{ opacity: 0 }}
           animate={titleControls}
         >
@@ -213,12 +243,13 @@ const HomeSection = () => {
             </motion.span>
           ))}
         </motion.h1>
-        <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-center relative z-20 px-4">
+        <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center relative z-20 px-4">
           <FlipWords words={flipWords} duration={2000} />
         </div>
       </motion.div>
-      <div className="w-full px-4 py-16 max-w-full overflow-hidden">
-        <div className="flex flex-col justify-center items-stretch gap-16 max-w-6xl mx-auto">
+      <div className="w-full px-4 py-16">
+      <div className="w-full px-4 py-16">
+        <div className="flex flex-col justify-center items-stretch gap-16">
           <Card 
             title="Sztuka w Sensorium"
             description="Odkryj nowatorskie postawy artystyczne na styku technologii i kultury."
@@ -233,6 +264,19 @@ const HomeSection = () => {
           />
         </div>
       </div>
+      </div>
+      {!hasScrolled && (
+        <ArrowDown className={`text-white animate-bounce ${hasScrolled ? 'fade-out' : 'fade-in'}`} style={{
+          position: "absolute",
+          left: "50%",
+          bottom: "4rem",
+          transform: "translateX(-50%)",
+          width: "2rem",
+          height: "2rem",
+          color: "white",
+          opacity: 0.8
+        }}/>
+      )}
     </div>
   );
 };

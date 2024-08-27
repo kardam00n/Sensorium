@@ -54,12 +54,12 @@ const PlacesSection = () => {
   }, [controls]);
 
   return (
-    <section id="places" className="py-40 bg-black text-white relative">
-      <div className="container mx-auto px-8">
-        <div className="text-center mb-40">
+    <section id="places" className="py-20 md:py-40 bg-black text-white relative">
+      <div className="container mx-auto px-4 md:px-8">
+        <div className="text-center mb-20 md:mb-40">
           <motion.h2
             ref={textRef}
-            className="text-9xl mb-6 inline-block font-bold"
+            className="text-4xl md:text-6xl lg:text-8xl mb-6 inline-block font-bold"
             variants={headingVariants}
             animate={controls}
           >
