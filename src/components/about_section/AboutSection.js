@@ -23,7 +23,7 @@ const AboutSection = () => {
   const isInView = useInView(sectionRef, { once: false, margin: '-100px' });
   const isInView2 = useInView(sectionRef, { once: true });
   const [isAnimating, setIsAnimating] = React.useState(false);
-  const [hasAppeared, setHasAppeared] = React.useState(false); 
+  const [hasAppeared, setHasAppeared] = React.useState(false);
 
   useEffect(() => {
     // Załaduj dane z pliku JSON
@@ -44,7 +44,7 @@ const AboutSection = () => {
         controlsWspolpracaLists.start({ opacity: 1, transition: { duration: 2.5, delay: 2.3 } })
       ]);
 
-      setHasAppeared(true); 
+      setHasAppeared(true);
     };
 
     if (isInView && !hasAppeared) {
@@ -59,7 +59,7 @@ const AboutSection = () => {
       controlsKreatywnoscLists.start({ opacity: 0 });
       controlsWspolpracaLists.start({ opacity: 0 });
 
-      setHasAppeared(false); 
+      setHasAppeared(false);
     }
 
     if (hasAppeared && isInView2 && !isAnimating) {
@@ -107,11 +107,8 @@ const AboutSection = () => {
       <motion.div
         className="relative z-10 w-full mx-auto"
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gridTemplateRows: "repeat(4, auto)",
-          gridGap: "2vw",
-          position: "relative",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         {keywords.map((item, index) => (
@@ -127,7 +124,7 @@ const AboutSection = () => {
             }
           />
         ))}
-        
+
       </motion.div>
 
       <AnimatedButton isInView={isInView} />

@@ -1,11 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const ListBlock = ({ listItems, gridColumn, gridRow, listAnimateControl }) => {
+const ListBlock = ({
+    listItems,
+    gridColumn,
+    gridRow,
+    listAnimateControl,
+    isVertical,
+}) => {
     const listStyle = {
-        color: "#D3D3D3",
-        textAlign: "left",
-        margin: "0 30px",
+        color: '#D3D3D3',
+        textAlign: 'left',
+        margin: '0 30px',
     };
 
     const listItemVariants = {
@@ -13,7 +19,7 @@ const ListBlock = ({ listItems, gridColumn, gridRow, listAnimateControl }) => {
             scale: 1.05,
             opacity: 1,
             transition: {
-                type: "spring",
+                type: 'spring',
                 stiffness: 300,
                 damping: 10,
                 duration: 0.5,
@@ -30,10 +36,11 @@ const ListBlock = ({ listItems, gridColumn, gridRow, listAnimateControl }) => {
             className="text-lg font-light tracking-wide"
             style={{
                 ...listStyle,
-                gridColumn: gridColumn === "1" ? "2" : "1",
-                gridRow: gridRow,
-                textAlign: gridColumn === "1" ? "left" : "right",
-                alignSelf: "center",
+                gridColumn: isVertical ? '1' : gridColumn === '1' ? '3' : '1',
+                gridRow: isVertical ? '3' : '1',
+                textAlign: isVertical ? 'left' : gridColumn === '1' ? 'left' : 'right',
+                alignSelf: 'center',
+                fontSize: isVertical ? '2.8vw' : '1.1vw',
             }}
             animate={listAnimateControl}
         >
@@ -44,8 +51,12 @@ const ListBlock = ({ listItems, gridColumn, gridRow, listAnimateControl }) => {
                         className="list-item"
                         initial="initial"
                         whileHover="hover"
-                        animate={{ opacity: listAnimateControl ? 1 : 0 }} // Animacja pojawiania listy
-                        transition={{ duration: 1, ease: "easeOut", delay: 0.2 + index * 0.1 }}
+                        animate={{ opacity: listAnimateControl ? 1 : 0 }}
+                        transition={{
+                            duration: 1,
+                            ease: 'easeOut',
+                            delay: 0.2 + index * 0.1,
+                        }}
                         variants={listItemVariants}
                     >
                         {item}
