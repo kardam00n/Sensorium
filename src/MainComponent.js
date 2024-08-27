@@ -159,7 +159,7 @@ const SensoriumWebsite = () => {
         scrollToSection={scrollToSection}
       />
 
-      <main className='dark-mode'>
+      <main className='dark-mode overflow-x-hidden'>
         <AnimatedSection id="home" animation="fadeIn">
           <HomeSection videoRef={videoRef} scrollToSection={scrollToSection} />
         </AnimatedSection>

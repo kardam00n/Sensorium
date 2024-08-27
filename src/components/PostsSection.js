@@ -26,8 +26,8 @@ const PostsSection = ({ posts, openPost }) => {
   }
 
   return (
-    <section id="posts" className="py-20 dark-mode">
-      <div className="container mx-auto px-4">
+    <section id="posts" className="py-20 w-full dark-mode flex justify-center">
+      <div className="container px-4">
         <h2 className="text-7xl md:text-8xl font-bold mb-24 text-center ">Projekty</h2>
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
