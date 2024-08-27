@@ -249,7 +249,7 @@ const HomeSection = () => {
       </motion.div>
       <div className="w-full px-4 py-16">
       <div className="w-full px-4 py-16">
-        <div className="flex flex-row justify-center items-stretch gap-16">
+        <div className="flex flex-col md:flex-row justify-center items-stretch gap-16">
           <Card 
             title="Sztuka w Sensorium"
             description="Odkryj nowatorskie postawy artystyczne na styku technologii i kultury."

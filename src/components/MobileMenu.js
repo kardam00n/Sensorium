@@ -87,6 +87,8 @@ const MobileMenu = ({
                         ? "Strona Główna"
                         : section === "posts"
                         ? "Projekty"
+                        : section === "about"
+                        ? "O nas"
                         : section === "places"
                         ? "Miejsca"
                         : section === "team"
