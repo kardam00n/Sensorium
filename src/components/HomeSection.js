@@ -216,6 +216,7 @@ const HomeSection = () => {
         </div>
       </motion.div>
       <div className="w-full px-4 py-16">
+      {/* <div className="w-full px-4 py-16">
         <div className="flex flex-col justify-center items-stretch gap-16">
           <Card 
             title="Sztuka w Sensorium"
@@ -229,7 +230,8 @@ const HomeSection = () => {
             imageUrl="https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             index={1}
           />
-        </div>
+        </div>}
+      </div> */}
       </div>
     </div>
   );
