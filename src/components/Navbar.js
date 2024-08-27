@@ -168,7 +168,7 @@ const Tab = ({ section, activeSection, isScrolled, scrollToSection, setCursorPos
       onClick={() => scrollToSection(section)}
     >
       {section === 'home' ? 'Strona Główna' :
-       section === 'posts' ? 'Projekty' :
+       section === 'posts' ? 'Posty' :
        section === "about"  ? "O projekcie":
        section === 'places' ? 'Miejsca' :
        section === 'team' ? 'Zespół' :
