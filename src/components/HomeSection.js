@@ -3,6 +3,8 @@ import { CardBody, CardContainer, CardItem } from "./3d-card";
 import "@fontsource/inter";
 import React, { useEffect, useRef, useState } from 'react';
 import { FlipWords } from "./flip-words";
+import "../arrow.css"
+import { ArrowDown } from 'lucide-react';
 
 const Card = ({ title, description, imageUrl, index }) => {
   const cardRef = useRef(null);
@@ -10,8 +12,23 @@ const Card = ({ title, description, imageUrl, index }) => {
     target: cardRef,
     offset: ["start end", "end start"]
   });
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   const springConfig = { stiffness: 100, damping: 30, restDelta: 0.00001 };
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setHasScrolled(true);
+      } else {
+        setHasScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const x = useSpring(
     useTransform(
@@ -156,6 +173,7 @@ const HomeSection = () => {
   const titleControls = useAnimation();
   const { scrollYProgress } = useScroll();
   const backgroundOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
     titleControls.start({
@@ -166,7 +184,21 @@ const HomeSection = () => {
     const unsubscribe = scrollYProgress.onChange((value) => {
       console.log('Scroll progress:', value);
     });
-    return () => unsubscribe();
+
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setHasScrolled(true);
+      } else {
+        setHasScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [titleControls, scrollYProgress]);
 
   const letterVariants = {
@@ -233,6 +265,18 @@ const HomeSection = () => {
         </div>}
       </div> */}
       </div>
+      {!hasScrolled && (
+        <ArrowDown className={`text-white animate-bounce ${hasScrolled ? 'fade-out' : 'fade-in'}`} style={{
+          position: "absolute",
+          left: "50%",
+          bottom: "4rem",
+          transform: "translateX(-50%)",
+          width: "2rem",
+          height: "2rem",
+          color: "white",
+          opacity: 0.8
+        }}/>
+      )}
     </div>
   );
 };
