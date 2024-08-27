@@ -10,6 +10,8 @@ import Footer from './components/Footer';
 import PostModal from './components/PostModal';
 import AnimatedSection from './components/AnimatedSection';
 import AboutSection from './components/about_section/AboutSection';
+import "./darkMode.css";
+
 
 const SensoriumWebsite = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -20,7 +22,7 @@ const SensoriumWebsite = () => {
   
   const videoRef = useRef(null);
 
-  const sections = useMemo(() => ['home', 'posts', 'about', 'places', 'team', 'contact'], []);
+  const sections = useMemo(() => ['home', 'posts', 'about', 'places','team','contact'], []);
 
   const posts = [
     { 
@@ -157,7 +159,7 @@ const SensoriumWebsite = () => {
         scrollToSection={scrollToSection}
       />
 
-      <main>
+      <main className='dark-mode'>
         <AnimatedSection id="home" animation="fadeIn">
           <HomeSection videoRef={videoRef} scrollToSection={scrollToSection} />
         </AnimatedSection>
