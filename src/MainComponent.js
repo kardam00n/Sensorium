@@ -22,7 +22,7 @@ const SensoriumWebsite = () => {
   
   const videoRef = useRef(null);
 
-  const sections = useMemo(() => ['home','about', 'posts', 'team', 'places','contact'], []);
+  const sections = useMemo(() => ['home','about', 'posts'], []);
 
   const posts = [
     { 
@@ -50,6 +50,10 @@ const SensoriumWebsite = () => {
       album: ['/debate.jpg', '/debate_2.jpg']
     },
   ];
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -153,15 +157,6 @@ const SensoriumWebsite = () => {
         <AnimatedSection id="posts" animation="slideUp">
           <PostsSection posts={posts} openPost={openPost} />
         </AnimatedSection>
-        <section id="team">
-          <TeamSection />
-        </section>
-        <section id="places">
-          <PlacesSection />
-        </section>
-        <section id="contact">
-          <ContactSection />
-        </section>
       </main>
 
       <Footer />
