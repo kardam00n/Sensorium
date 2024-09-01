@@ -89,7 +89,7 @@ Wszystkie cele szczegółowe łączy wspólne przekonanie o dużej wartości dzi
         <div className="text-left mb-20">
           <motion.h2
             ref={textRef}
-            className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl mb-6 text-white inline-block font-bold"
+            className="font-heading text-5xl sm:text-7xl md:text-8xl lg:text-9xl mb-6 text-white inline-block font-bold"
             variants={headingVariants}
             animate={controls}
           >

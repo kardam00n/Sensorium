@@ -95,7 +95,7 @@ const AboutSection = () => {
         // padding: "5vh 5%",
         color: "#ffffff",
         backgroundColor: "#000000",
-        fontFamily: "'Helvetica Neue', sans-serif",
+        fontFamily: "'KyivTypeSans', sans-serif",
         position: "relative",
       }}
     >

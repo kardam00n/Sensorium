@@ -140,7 +140,7 @@ const TeamSection = () => {
       <div className="text-center mb-40">
           <motion.h2
             ref={textRef}
-            className="text-7xl md:text-9xl mb-6 inline-block font-bold"
+            className="font-heading text-7xl md:text-9xl mb-6 inline-block font-bold"
             variants={headingVariants}
             animate={controls}
           >
