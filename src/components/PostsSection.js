@@ -1,6 +1,7 @@
 import React, { useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import AnimatedButton from './about_section/AnimatedButton';
 import "../darkMode.css";
 
 const PostsSection = ({ posts, openPost }) => {
@@ -14,12 +15,15 @@ const PostsSection = ({ posts, openPost }) => {
     }
   };
 
+  const isInView = useInView(useRef(null), { once: false, margin: '-100px' });
+
   if (!Array.isArray(posts) || posts.length === 0) {
     return (
       <section id="posts" className="py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark-mode">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-12 text-center">Najnowsze posty</h2>
+          <h2 className="text-4xl font-bold mb-12 text-center">Wyróżnione posty</h2>
           <p className="text-center ">Brak dostępnych postów.</p>
+          <AnimatedButton isInView={isInView} text={"Zobacz wszystkie posty"} route={"/allPosts"}/>
         </div>
       </section>
     );
@@ -28,9 +32,9 @@ const PostsSection = ({ posts, openPost }) => {
   return (
     <section id="posts" className="py-20 w-full dark-mode flex justify-center">
       <div className="container px-4">
-        <h2 className="text-7xl md:text-8xl font-bold mb-24 text-center ">Posty</h2>
+        <h2 className="text-7xl md:text-8xl font-bold mb-24 text-center ">Wyróżnione posty</h2>
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          className="flex flex-col gap-8 md:gap-16"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -44,6 +48,7 @@ const PostsSection = ({ posts, openPost }) => {
               isRight={index % 2 !== 0}
             />
           ))}
+          <AnimatedButton isInView={isInView} text={"Zobacz wszystkie posty"} route={"/allPosts"}/>
         </motion.div>
       </div>
     </section>
@@ -83,7 +88,7 @@ const PostItem = ({ post, index, openPost, isRight }) => {
   const handleMouseLeave = useCallback(() => {
     const thumbnail = thumbnailRef.current;
     if (!thumbnail) return;
-    
+
     thumbnail.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
   }, []);
 
@@ -116,33 +121,34 @@ const PostItem = ({ post, index, openPost, isRight }) => {
       initial="hidden"
       animate={inView ? "visible" : "hidden"}
       exit="exit"
-      className="cursor-pointer"
+      className={`cursor-pointer flex flex-col md:flex-row ${isRight ? 'md:flex-row-reverse md:justify-end' : 'md:justify-start'} items-center md:space-x-8`}
       onClick={() => openPost(post)}
     >
-      <div 
-        className="overflow-hidden rounded-lg mb-3 aspect-w-1 aspect-h-1"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      >
+      <div className="w-full md:w-1/2 mb-4 md:mb-0">
         <div 
-          ref={thumbnailRef}
-          className="w-full h-full transition-transform duration-300 ease-out"
-          style={{ transformStyle: 'preserve-3d' }}
+          className="overflow-hidden rounded-lg mb-3 aspect-w-16 aspect-h-9"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
         >
-          <img 
-            src={post.thumbnail} 
-            alt={post.title} 
-            className="object-cover w-full h-full"
-          />
+          <div 
+            ref={thumbnailRef}
+            className="w-full h-full transition-transform duration-300 ease-out"
+            style={{ transformStyle: 'preserve-3d' }}
+          >
+            <img 
+              src={post.thumbnail} 
+              alt={post.title} 
+              className="object-cover w-full h-full"
+            />
+          </div>
         </div>
       </div>
-      <div className="text-left">
-        <h3 className="text-lg font-bold mb-1">{post.title}</h3>
-        <p className="text-sm">{post.excerpt}</p>
+      <div className="w-full md:w-1/2 text-left">
+      <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">{post.title}</h3>
+      <p className="text-sm md:text-base">{post.excerpt}</p>
       </div>
     </motion.div>
   );
 };
-
 
 export default PostsSection;

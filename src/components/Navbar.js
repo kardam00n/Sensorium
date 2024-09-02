@@ -2,11 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSpring, animated } from 'react-spring';
 import { Squash as Hamburger } from 'hamburger-react'; 
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ activeSection, sections, scrollToSection, isMenuOpen, setIsMenuOpen, scrollProgress }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navRef = useRef(null);
+
+  const navigate = useNavigate();
+
   const [cursorPosition, setCursorPosition] = useState({
     left: 0,
     top: 0,
@@ -68,7 +72,7 @@ const Navbar = ({ activeSection, sections, scrollToSection, isMenuOpen, setIsMen
           }`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => scrollToSection('home')}
+          onClick={() => navigate('/')}
         >
           Sensorium
         </motion.div>

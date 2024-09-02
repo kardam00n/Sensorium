@@ -22,7 +22,7 @@ const SensoriumWebsite = () => {
   
   const videoRef = useRef(null);
 
-  const sections = useMemo(() => ['home','about', 'posts', 'team', 'places','contact'], []);
+  const sections = useMemo(() => ['home','about', 'posts'], []);
 
   const posts = [
     { 
@@ -49,23 +49,11 @@ const SensoriumWebsite = () => {
       thumbnail: '/debate.jpg',
       album: ['/debate.jpg', '/debate_2.jpg']
     },
-    { 
-      id: 4, 
-      title: 'Przyszłość Zwrotu Hapticznego', 
-      excerpt: 'Dowiedz się o nowych technologiach w zakresie wrażeń dotykowych.', 
-      content: 'Pełna treść posta o zwrocie haptycznym... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum odio eget rutrum posuere. Aliquam rhoncus aliquam hendrerit. Fusce sed enim magna. Sed libero ligula, maximus faucibus est id, facilisis auctor arcu. Vestibulum vulputate, diam id vehicula euismod, risus diam iaculis mi, eget placerat mi massa non metus. Donec metus neque, facilisis eu felis eu, semper feugiat odio. Maecenas euismod arcu orci, vitae molestie lorem mollis eget. Aliquam erat volutpat. Aliquam erat volutpat. Nunc vitae ex massa. Donec a pellentesque enim. In dapibus ex eget semper elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam erat volutpat. Donec at erat ornare, accumsan lacus vel, venenatis velit. ', 
-      thumbnail: '/workshop.jpg',
-      album: ['/workshop.jpg', '/workshop_2.jpg']
-    },
-    { 
-      id: 5, 
-      title: 'art&science – debata w Pałacu Sztuki', 
-      excerpt: 'Dowiedz się o nowych technologiach w zakresie wrażeń dotykowych.', 
-      content: 'Pełna treść posta o zwrocie haptycznym... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum odio eget rutrum posuere. Aliquam rhoncus aliquam hendrerit. Fusce sed enim magna. Sed libero ligula, maximus faucibus est id, facilisis auctor arcu. Vestibulum vulputate, diam id vehicula euismod, risus diam iaculis mi, eget placerat mi massa non metus. Donec metus neque, facilisis eu felis eu, semper feugiat odio. Maecenas euismod arcu orci, vitae molestie lorem mollis eget. Aliquam erat volutpat. Aliquam erat volutpat. Nunc vitae ex massa. Donec a pellentesque enim. In dapibus ex eget semper elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam erat volutpat. Donec at erat ornare, accumsan lacus vel, venenatis velit. ',
-      thumbnail: '/debate2.jpg',
-      album: ['/debate2.jpg', '/debate2_2.jpg']
-    },
   ];
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -169,15 +157,6 @@ const SensoriumWebsite = () => {
         <AnimatedSection id="posts" animation="slideUp">
           <PostsSection posts={posts} openPost={openPost} />
         </AnimatedSection>
-        <section id="team">
-          <TeamSection />
-        </section>
-        <section id="places">
-          <PlacesSection />
-        </section>
-        <section id="contact">
-          <ContactSection />
-        </section>
       </main>
 
       <Footer />
