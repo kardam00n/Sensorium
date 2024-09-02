@@ -226,7 +226,7 @@ const HomeSection = ({videoRef, scrollToSection}) => {
       <motion.div className="min-h-screen flex flex-col items-center justify-center relative">
         <BackgroundLines opacity={backgroundOpacity} scrollProgress={scrollYProgress} />
         <motion.h1 
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-center leading-none tracking-tighter relative z-10 mb-8 px-4"
+          className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold text-center leading-none tracking-tighter relative z-10 mb-8 px-4"
           initial={{ opacity: 0 }}
           animate={titleControls}
         >

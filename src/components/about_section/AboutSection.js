@@ -10,6 +10,7 @@ import data from '../../about-data.json';
 const AboutSection = () => {
   const [keywords, setKeywords] = useState([]);
   const sectionRef = useRef(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const controlsInnowacyjnosc = useAnimation();
   const controlsEdukacja = useAnimation();
@@ -22,49 +23,52 @@ const AboutSection = () => {
 
   const isInView = useInView(sectionRef, { once: false, margin: '-100px' });
   const isInView2 = useInView(sectionRef, { once: true });
-  const [isAnimating, setIsAnimating] = React.useState(false);
-  const [hasAppeared, setHasAppeared] = React.useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [hasAppeared, setHasAppeared] = useState(false);
 
   useEffect(() => {
-    // Załaduj dane z pliku JSON
     setKeywords(data.keywords);
+    setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    const startAnimations = async () => {
-      // Animacje pojawiania się napisów
-      await Promise.all([
-        controlsInnowacyjnosc.start({ opacity: 1, x: 0, transition: { duration: 2 } }),
-        controlsEdukacja.start({ opacity: 1, x: 0, transition: { duration: 2, delay: 0.6 } }),
-        controlsKreatywnosc.start({ opacity: 1, x: 0, transition: { duration: 2, delay: 1.2 } }),
-        controlsWspolpraca.start({ opacity: 1, x: 0, transition: { duration: 2, delay: 1.8 } }),
-        controlsInnowacyjnoscLists.start({ opacity: 1, transition: { duration: 2.5, delay: 0.5 } }),
-        controlsEdukacjaLists.start({ opacity: 1, transition: { duration: 2.5, delay: 1.1 } }),
-        controlsKreatywnoscLists.start({ opacity: 1, transition: { duration: 2.5, delay: 1.7 } }),
-        controlsWspolpracaLists.start({ opacity: 1, transition: { duration: 2.5, delay: 2.3 } })
-      ]);
+    if (!isMounted) return;
 
-      setHasAppeared(true);
+    const startAnimations = async () => {
+      if (isInView && !hasAppeared) {
+        await Promise.all([
+          controlsInnowacyjnosc.start({ opacity: 1, x: 0, transition: { duration: 2 } }),
+          controlsEdukacja.start({ opacity: 1, x: 0, transition: { duration: 2, delay: 0.6 } }),
+          controlsKreatywnosc.start({ opacity: 1, x: 0, transition: { duration: 2, delay: 1.2 } }),
+          controlsWspolpraca.start({ opacity: 1, x: 0, transition: { duration: 2, delay: 1.8 } }),
+          controlsInnowacyjnoscLists.start({ opacity: 1, transition: { duration: 2.5, delay: 0.5 } }),
+          controlsEdukacjaLists.start({ opacity: 1, transition: { duration: 2.5, delay: 1.1 } }),
+          controlsKreatywnoscLists.start({ opacity: 1, transition: { duration: 2.5, delay: 1.7 } }),
+          controlsWspolpracaLists.start({ opacity: 1, transition: { duration: 2.5, delay: 2.3 } })
+        ]);
+        setHasAppeared(true);
+      } else if (!isInView) {
+        controlsInnowacyjnosc.set({ opacity: 0, x: -300 });
+        controlsEdukacja.set({ opacity: 0, x: 300 });
+        controlsKreatywnosc.set({ opacity: 0, x: -300 });
+        controlsWspolpraca.set({ opacity: 0, x: 300 });
+        controlsInnowacyjnoscLists.set({ opacity: 0 });
+        controlsEdukacjaLists.set({ opacity: 0 });
+        controlsKreatywnoscLists.set({ opacity: 0 });
+        controlsWspolpracaLists.set({ opacity: 0 });
+        setHasAppeared(false);
+      }
     };
 
-    if (isInView && !hasAppeared) {
-      startAnimations();
-    } else if (!isInView) {
-      controlsInnowacyjnosc.start({ opacity: 0, x: -300, transition: { duration: 0 } });
-      controlsEdukacja.start({ opacity: 0, x: 300, transition: { duration: 0 } });
-      controlsKreatywnosc.start({ opacity: 0, x: -300, transition: { duration: 0 } });
-      controlsWspolpraca.start({ opacity: 0, x: 300, transition: { duration: 0 } });
-      controlsInnowacyjnoscLists.start({ opacity: 0 });
-      controlsEdukacjaLists.start({ opacity: 0 });
-      controlsKreatywnoscLists.start({ opacity: 0 });
-      controlsWspolpracaLists.start({ opacity: 0 });
+    startAnimations();
+  }, [isMounted, isInView, hasAppeared, controlsInnowacyjnosc, controlsEdukacja, controlsKreatywnosc, controlsWspolpraca, controlsInnowacyjnoscLists, controlsEdukacjaLists, controlsKreatywnoscLists, controlsWspolpracaLists]);
 
-      setHasAppeared(false);
-    }
+  useEffect(() => {
+    if (!isMounted) return;
 
-    if (hasAppeared && isInView2 && !isAnimating) {
-      setIsAnimating(true);
-      const animateColors = async () => {
+    const animateColors = async () => {
+      if (hasAppeared && isInView2 && !isAnimating) {
+        setIsAnimating(true);
         await controlsInnowacyjnosc.start({ y: -5, color: '#FF4500', transition: { duration: 0.1, delay: 0 } });
         await controlsInnowacyjnosc.start({ y: 5, color: '#D3D3D3', transition: { duration: 0.1, delay: 1.3 } });
         await controlsEdukacja.start({ y: -5, color: '#FF4500', transition: { duration: 0.1, delay: 0 } });
@@ -74,12 +78,11 @@ const AboutSection = () => {
         await controlsWspolpraca.start({ y: -5, color: '#FF4500', transition: { duration: 0.1, delay: 0 } });
         await controlsWspolpraca.start({ y: 5, color: '#D3D3D3', transition: { duration: 0.1, delay: 1.3 } });
         setIsAnimating(false);
-      };
+      }
+    };
 
-      animateColors();
-    }
-  }, [isInView, isInView2, isAnimating, hasAppeared]);
-
+    animateColors();
+  }, [isMounted, isInView2, isAnimating, hasAppeared, controlsInnowacyjnosc, controlsEdukacja, controlsKreatywnosc, controlsWspolpraca]);
 
   return (
     <section
@@ -92,18 +95,14 @@ const AboutSection = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        // padding: "5vh 5%",
         color: "#ffffff",
         backgroundColor: "#000000",
-        fontFamily: "'Helvetica Neue', sans-serif",
+        fontFamily: "'KyivTypeSans', sans-serif",
         position: "relative",
       }}
     >
-
       <Background />
-
       <Heading isInView={isInView} />
-
       <motion.div
         className="relative z-10 w-full mx-auto"
         style={{
@@ -113,6 +112,7 @@ const AboutSection = () => {
       >
         {keywords.map((item, index) => (
           <KeywordBlock
+            key={item.keyword}
             keyword={item.keyword}
             listItems={item.listItems}
             gridRow={index + 1}
@@ -124,11 +124,8 @@ const AboutSection = () => {
             }
           />
         ))}
-
       </motion.div>
-
-      {/* <AnimatedButton isInView={isInView} /> */}
-
+      <AnimatedButton isInView={isInView} text={"Więcej o projekcie"} route={"/about"}/>
     </section>
   );
 };

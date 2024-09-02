@@ -174,7 +174,7 @@ const TeamSection = () => {
             variants={headingVariants}
             animate={controls}
           >
-            {splitText('Nasz zespół')}
+            {splitText('Zespół')}
           </motion.h2>
         </div>
         <div className="flex flex-col-reverse md:flex-row items-center md:items-start gap-12">

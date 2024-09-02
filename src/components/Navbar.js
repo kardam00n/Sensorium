@@ -2,11 +2,29 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSpring, animated } from 'react-spring';
 import { Squash as Hamburger } from 'hamburger-react'; 
+import { useNavigate } from 'react-router-dom';
 
-const Navbar = ({ activeSection, sections, scrollToSection, isMenuOpen, setIsMenuOpen, scrollProgress }) => {
+const Navbar = ({ activeSection, scrollToSection, isMenuOpen, setIsMenuOpen, scrollProgress }) => {
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navRef = useRef(null);
+
+  const sections = ["home", "posts", "about", "contact"];
+
+  const getRouteForSection = (section) => {
+    const routes = {
+      home: "/",
+      posts: "/allPosts",
+      about: "/about",
+      contact: "/contact",
+    };
+    return routes[section] || "/";
+  };
+
+  const navigate = useNavigate();
+
+
   const [cursorPosition, setCursorPosition] = useState({
     left: 0,
     top: 0,
@@ -68,7 +86,7 @@ const Navbar = ({ activeSection, sections, scrollToSection, isMenuOpen, setIsMen
           }`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => scrollToSection('home')}
+          onClick={() => navigate('/')}
         >
           Sensorium
         </motion.div>
@@ -90,6 +108,7 @@ const Navbar = ({ activeSection, sections, scrollToSection, isMenuOpen, setIsMen
                 isScrolled={isScrolled}
                 scrollToSection={scrollToSection}
                 setCursorPosition={setCursorPosition}
+                route={getRouteForSection(section)}
               />
             ))}
             <Cursor position={cursorPosition} />
@@ -130,9 +149,11 @@ const Navbar = ({ activeSection, sections, scrollToSection, isMenuOpen, setIsMen
   );
 };
 
-const Tab = ({ section, activeSection, isScrolled, scrollToSection, setCursorPosition }) => {
+const Tab = ({ section, activeSection, isScrolled, scrollToSection, setCursorPosition, route }) => {
   const ref = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <li
@@ -165,7 +186,7 @@ const Tab = ({ section, activeSection, isScrolled, scrollToSection, setCursorPos
             : 'text-white text-base'
       }`}
       
-      onClick={() => scrollToSection(section)}
+      onClick={() => navigate(route)}
     >
       {section === 'home' ? 'Strona Główna' :
        section === 'posts' ? 'Posty' :

@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const MobileMenu = ({
   isMenuOpen,
   toggleMenu,
-  sections,
   activeSection,
   scrollToSection,
 }) => {
@@ -15,6 +15,20 @@ const MobileMenu = ({
     opacity: 0,
   });
   const [hoveredSection, setHoveredSection] = useState(null);
+
+  const sections = ["home", "posts", "about", "contact"];
+
+  const getRouteForSection = (section) => {
+    const routes = {
+      home: "/",
+      posts: "/allPosts",
+      about: "/about",
+      contact: "/contact",
+    };
+    return routes[section] || "/";
+  };
+
+  const navigate = useNavigate();
 
   const handleMouseEnter = useCallback((e, section) => {
     const { offsetWidth, offsetLeft, offsetTop } = e.currentTarget;
@@ -77,7 +91,7 @@ const MobileMenu = ({
                       whileHover={{ scale: 1.1, originX: 0 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => {
-                        scrollToSection(section);
+                        navigate(getRouteForSection(section));
                         toggleMenu();
                       }}
                       onMouseEnter={(e) => handleMouseEnter(e, section)}

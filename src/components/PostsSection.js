@@ -1,9 +1,10 @@
 import React, { useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import AnimatedButton from './about_section/AnimatedButton';
 import "../darkMode.css";
 
-const PostsSection = ({ posts, openPost }) => {
+const PostsSection = ({ posts, openPost, searchQuery, handleSearchChange }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -14,11 +15,15 @@ const PostsSection = ({ posts, openPost }) => {
     }
   };
 
+  const isInView = useInView(useRef(null), { once: false, margin: '-100px' });
+
   if (!Array.isArray(posts) || posts.length === 0) {
     return (
-      <section id="posts" className="py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark-mode">
+      <section
+        id="posts"
+        className="py-20 dark-mode"
+      >
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-12 text-center">Najnowsze posty</h2>
           <p className="text-center ">Brak dostępnych postów.</p>
         </div>
       </section>
@@ -26,17 +31,22 @@ const PostsSection = ({ posts, openPost }) => {
   }
 
   return (
-    <section id="posts" className="py-20 w-full dark-mode flex justify-center">
-      <div className="container px-4">
-        <h2 className="text-7xl md:text-8xl font-bold mb-24 text-center ">Posty</h2>
-        <motion.div 
+    <section
+      id="posts"
+      className="py-16 w-full h-full dark-mode min-h-screen flex flex-col items-center overflow-x-hidden relative"
+    >
+      <div className="container px-4 flex-grow">
+        {posts.length === 0 && (
+          <p className="text-center ">Brak dostępnych postów.</p>
+        )}
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           {posts.map((post, index) => (
-            <PostItem 
+            <PostItem
               key={post.id}
               post={post}
               index={index}
@@ -46,6 +56,7 @@ const PostsSection = ({ posts, openPost }) => {
           ))}
         </motion.div>
       </div>
+     
     </section>
   );
 };
@@ -53,7 +64,7 @@ const PostsSection = ({ posts, openPost }) => {
 const PostItem = ({ post, index, openPost, isRight }) => {
   const [ref, inView] = useInView({
     threshold: 0.2,
-    triggerOnce: false
+    triggerOnce: false,
   });
 
   const thumbnailRef = useRef(null);
@@ -83,30 +94,31 @@ const PostItem = ({ post, index, openPost, isRight }) => {
   const handleMouseLeave = useCallback(() => {
     const thumbnail = thumbnailRef.current;
     if (!thumbnail) return;
-    
-    thumbnail.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+
+    thumbnail.style.transform =
+      "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
   }, []);
 
   const itemVariants = {
     hidden: { opacity: 0, x: isRight ? 50 : -50 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       x: 0,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 100,
-        damping: 15
-      }
+        damping: 15,
+      },
     },
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       x: isRight ? 50 : -50,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 100,
-        damping: 15
-      }
-    }
+        damping: 15,
+      },
+    },
   };
 
   return (
@@ -119,19 +131,19 @@ const PostItem = ({ post, index, openPost, isRight }) => {
       className="cursor-pointer"
       onClick={() => openPost(post)}
     >
-      <div 
+      <div
         className="overflow-hidden rounded-lg mb-3 aspect-w-1 aspect-h-1"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        <div 
+        <div
           ref={thumbnailRef}
           className="w-full h-full transition-transform duration-300 ease-out"
-          style={{ transformStyle: 'preserve-3d' }}
+          style={{ transformStyle: "preserve-3d" }}
         >
-          <img 
-            src={post.thumbnail} 
-            alt={post.title} 
+          <img
+            src={post.thumbnail}
+            alt={post.title}
             className="object-cover w-full h-full"
           />
         </div>
@@ -143,6 +155,5 @@ const PostItem = ({ post, index, openPost, isRight }) => {
     </motion.div>
   );
 };
-
 
 export default PostsSection;
