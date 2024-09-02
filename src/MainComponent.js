@@ -2,10 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Navbar from './components/Navbar';
 import MobileMenu from './components/MobileMenu';
 import HomeSection from './components/HomeSection';
-import PostsSection from './components/PostsSection';
-import PlacesSection from './components/PlacesSection';
-import TeamSection from './components/TeamSection';
-import ContactSection from './components/ContactSection';
+import FeaturedPostsSection from './components/FeaturedPostsSection';
 import Footer from './components/Footer';
 import PostModal from './components/PostModal';
 import AnimatedSection from './components/AnimatedSection';
@@ -64,17 +61,6 @@ const SensoriumWebsite = () => {
       setScrollProgress(scrollPercentage);
       
       setIsAtTop(scrollPosition < 50);
-      
-      sections.forEach(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop - windowHeight / 2 && 
-              scrollPosition < offsetTop + offsetHeight - windowHeight / 2) {
-            setActiveSection(section);
-          }
-        }
-      });
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -131,7 +117,6 @@ const SensoriumWebsite = () => {
     <div className="min-h-screen bg-gray-100 text-gray-900">
       <Navbar 
         activeSection={activeSection} 
-        sections={sections} 
         scrollToSection={scrollToSection} 
         isMenuOpen={isMenuOpen}
         scrollProgress={scrollProgress}
@@ -141,8 +126,7 @@ const SensoriumWebsite = () => {
       
       <MobileMenu 
         isMenuOpen={isMenuOpen} 
-        toggleMenu={toggleMenu} 
-        sections={sections} 
+        toggleMenu={toggleMenu}
         activeSection={activeSection} 
         scrollToSection={scrollToSection}
       />
@@ -155,7 +139,7 @@ const SensoriumWebsite = () => {
           <AboutSection />
         </section>
         <AnimatedSection id="posts" animation="slideUp">
-          <PostsSection posts={posts} openPost={openPost} />
+          <FeaturedPostsSection posts={posts} openPost={openPost} />
         </AnimatedSection>
       </main>
 

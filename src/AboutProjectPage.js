@@ -6,9 +6,10 @@ import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import MobileMenu from "./components/MobileMenu";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 const AboutProjectPage = () => {
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState("about");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -30,19 +31,6 @@ const AboutProjectPage = () => {
       setScrollProgress(scrollPercentage);
 
       setIsAtTop(scrollPosition < 50);
-
-      sections.forEach((section) => {
-        const element = document.getElementById(section);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (
-            scrollPosition >= offsetTop - windowHeight / 2 &&
-            scrollPosition < offsetTop + offsetHeight - windowHeight / 2
-          ) {
-            setActiveSection(section);
-          }
-        }
-      });
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -82,23 +70,11 @@ const AboutProjectPage = () => {
 
   const paragraphs = [
     "Projekt Sensorium ma na celu prezentacje nowatorskich postaw artystycznych na styku sztuki, nauki i technologii, które nie tylko łączą te dziedziny, lecz również poszukują nieoczywistych inspiracji, przekraczając klasyczne definicje sztuki i jej dyscyplin oraz podnosząc problemy współczesnego społeczeństwa w kontekście technokulturowych procesów.",
-
-    ,
     "Głównym celem projektu jest poszerzenie wpływu sztuki medialnej i technologicznej w Polsce, otwarcia na nowe praktyki naukowe i artystyczne, wprowadzenia krytycznego dyskursu o technokulturze, zainteresowania twórców nowymi badaniami naukowymi oraz pogłębionej analizy relacji między kulturą, nauką i technologią w nurtach tzw. art&science.",
-
-    ,
     "Prezentacje działań artystycznych w różnych przestrzeniach wystawienniczych w Krakowie stanowią zapis doświadczeń naukowo-artystycznych i odpowiedź na oczekiwania społeczne poprzez kształtowanie nowych form uczestnictwa i ekspresji oraz próbę zrozumienia technokulturowej rzeczywistości.",
-
-    ,
     "Obserwujemy, że współcześnie technologia staje się integralną częścią procesów społecznych, politycznych i ekonomicznych, co prowadzi do swoistej redefinicji pojęcia sztuki, gdzie narzędzia i kompetencje jej twórców nie są wyłącznie warsztatem, ale stają się częścią metamedialnych interakcji społecznych.",
-
-    ,
     "Sztuka aktualna rozwija się w kontekście procesów globalizacji cyfrowej. Definiujemy formy wypowiedzi artystycznej w nowych mediach poprzez metodologię uważnej obserwacji środowiska, kreatywność, innowacje oraz aspiracje do tworzenia dzieł o uniwersalnym znaczeniu.",
-
-    ,
     "Obszar sztuki stał się polem badań, a artysta–badacz wykorzystuje narzędzia naukowe i koncepcje opracowane przez badaczy i naukowców. Według Stephena Wilsona badania naukowe radykalnie przekształcają naszą kulturę, a sztuka musi być istotną częścią tych procesów.",
-
-    ,
     "Poszukujemy punktów wspólnych dla nauki i sztuki poprzez badania odwołujące się do zdobyczy naukowych, które są wykorzystywane przez artystów. Projekt dofinansowano ze środków Ministra Kultury i Dziedzictwa Narodowego w ramach programu własnego Centrum Rozwoju Przemysłów Kreatywnych: Rozwój Sektorów Kreatywnych.",
   ];
 
@@ -131,6 +107,40 @@ const AboutProjectPage = () => {
         {char}
       </motion.span>
     ));
+  };
+
+  
+  const AnimatedParagraph = ({ text, index, isRight }) => {
+    const [ref, inView] = useInView({
+      threshold: 0.1,
+      rootMargin: "-100px 0px"
+    });
+  
+    const paragraphVariants = {
+      hidden: { opacity: 0, x: isRight ? 50 : -50 },
+      visible: { 
+        opacity: 1, 
+        x: 0,
+        transition: {
+          type: 'spring',
+          stiffness: 50,
+          damping: 20,
+          duration: 0.6
+        }
+      }
+    };
+  
+    return (
+      <motion.div 
+        ref={ref}
+        variants={paragraphVariants}
+        initial="hidden"
+        animate={inView ? "visible" : "hidden"}
+        className={`w-full md:w-3/4 ${isRight ? "ml-auto" : ""}`}
+      >
+        <p className="text-2xl leading-relaxed text-justify my-16">{text}</p>
+      </motion.div>
+    );
   };
 
   return (
@@ -166,9 +176,7 @@ const AboutProjectPage = () => {
               </motion.h2>
             </div>
             {paragraphs.map((paragraph, index) => (
-                <p key={index} className={`text-2xl leading-relaxed text-justify my-16 w-full md:w-3/4 ${(index/2)%2==0 ? 'ml-auto' : ''}`}>
-                    {paragraph}
-                </p>
+              <AnimatedParagraph key={index} text={paragraph} index={index} isRight={index%2===0} />
             ))}
           </div>
         </section>

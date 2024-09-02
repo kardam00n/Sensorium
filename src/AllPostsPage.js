@@ -2,13 +2,69 @@ import React, { useRef, useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import AnimatedButton from "./components/about_section/AnimatedButton";
+import Navbar from "./components/Navbar";
+import MobileMenu from "./components/MobileMenu";
 import PostModal from "./components/PostModal";
-import { ArrowLeft, ArrowUp } from "lucide-react";
+import PostsSection from "./components/PostsSection";
+import { ArrowUp } from "lucide-react";
+import Footer from "./components/Footer";
 import "./darkMode.css";
 
 const AllPostsPage = () => {
   const [activePost, setActivePost] = useState(null);
+  const [activeSection, setActiveSection] = useState("posts");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const fullHeight = document.documentElement.scrollHeight;
+      const scrollPercentage =
+        (scrollPosition / (fullHeight - windowHeight)) * 100;
+      setScrollProgress(scrollPercentage);
+
+      setIsAtTop(scrollPosition < 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Call once to set initial state
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const navbarHeight = document.querySelector("nav").offsetHeight;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
 
   const [searchQuery, setSearchQuery] = useState("");
   const ref = useRef(null);
@@ -119,75 +175,43 @@ const AllPostsPage = () => {
       post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (!Array.isArray(posts) || posts.length === 0) {
-    return (
-      <section
-        id="posts"
-        className="py-20 bg-gradient-to-b from-blue-50 to-purple-50 dark-mode"
-      >
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-12 text-center">
-            Najnowsze posty
-          </h2>
-          <p className="text-center ">Brak dostępnych postów.</p>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section
-      id="posts"
-      className="py-20 w-full h-full dark-mode min-h-screen flex flex-col items-center overflow-x-hidden relative"
-    >
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => navigate("/")}
-        className="absolute top-6 left-6 md:top-12  md:left-12 bg-white text-black font-medium py-2 px-4 rounded-full shadow-lg flex items-center space-x-2 hover:bg-gray-100"
-        style={{ zIndex: 10 }}
-      >
-        <ArrowLeft className="w-4 h-4" />
-        {!isMobile && <span>Powrót</span>}
-      </motion.button>
-      <div className="container px-4 flex-grow">
-        <h2 className="text-7xl md:text-8xl font-bold mb-12 text-center ">
-          Posty
-        </h2>
-        <div className="mb-16">
-          <input
-            type="text"
-            placeholder="Szukaj..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className=" w-4/5 md:w-1/3 p-2 border-b border-gray-300 bg-black text-white pl-6"
-          />
-        </div>
-        {filteredPosts.length === 0 && (
-          <p className="text-center ">Brak dostępnych postów.</p>
-        )}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {filteredPosts.map((post, index) => (
-            <PostItem
-              key={post.id}
-              post={post}
-              index={index}
-              openPost={openPost}
-              isRight={index % 2 !== 0}
-            />
-          ))}
-        </motion.div>
+    <div div className="min-h-screen bg-gray-100 text-gray-900 dark-mode">
+      <Navbar
+        activeSection={activeSection}
+        scrollToSection={scrollToSection}
+        isMenuOpen={isMenuOpen}
+        scrollProgress={scrollProgress}
+        isAtTop={isAtTop}
+        setIsMenuOpen={setIsMenuOpen}
+      />
+
+      <MobileMenu
+        isMenuOpen={isMenuOpen}
+        toggleMenu={toggleMenu}
+        activeSection={activeSection}
+        scrollToSection={scrollToSection}
+      />
+
+      <h2 className="text-7xl md:text-8xl font-bold pt-20 md:pt-16 mb-12 text-center ">
+        Posty
+      </h2>
+      <div className="mb-16">
+        <input
+          type="text"
+          placeholder="Szukaj..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className=" w-4/5 md:w-1/3 p-2 border-b border-gray-300 bg-black text-white pl-6"
+        />
       </div>
-      <PostModal activePost={activePost} closePost={closePost} />
-      <div
-        className="absolute bottom-6 md:bottom-12 left-1/2 transform -translate-x-1/2"
-        style={{ zIndex: 10 }}
-      >
+      <PostsSection
+        posts={filteredPosts}
+        openPost={openPost}
+        searchQuery={searchQuery}
+        handleSearchChange={handleSearchChange}
+      />
+      <div className="flex justify-center mt-8 mb-16">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -198,103 +222,9 @@ const AllPostsPage = () => {
           <span>Top</span>
         </motion.button>
       </div>
-    </section>
+      <Footer />
+      <PostModal activePost={activePost} closePost={closePost} />
+    </div>
   );
 };
-
-const PostItem = ({ post, index, openPost, isRight }) => {
-  const [ref, inView] = useInView({
-    threshold: 0.2,
-    triggerOnce: false,
-  });
-
-  const thumbnailRef = useRef(null);
-
-  const handleMouseMove = useCallback((e) => {
-    const thumbnail = thumbnailRef.current;
-    if (!thumbnail) return;
-
-    const rect = thumbnail.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = ((y - centerY) / centerY) * 10;
-    const rotateY = ((centerX - x) / centerX) * 10;
-
-    thumbnail.style.transform = `
-      perspective(1000px) 
-      rotateX(${rotateX}deg) 
-      rotateY(${rotateY}deg) 
-      scale3d(1.05, 1.05, 1.05)
-    `;
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    const thumbnail = thumbnailRef.current;
-    if (!thumbnail) return;
-
-    thumbnail.style.transform =
-      "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
-  }, []);
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: isRight ? 50 : -50 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-      },
-    },
-    exit: {
-      opacity: 0,
-      x: isRight ? 50 : -50,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-      },
-    },
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      variants={itemVariants}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
-      exit="exit"
-      className="cursor-pointer"
-      onClick={() => openPost(post)}
-    >
-      <div
-        className="overflow-hidden rounded-lg mb-3 aspect-w-1 aspect-h-1"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      >
-        <div
-          ref={thumbnailRef}
-          className="w-full h-full transition-transform duration-300 ease-out"
-          style={{ transformStyle: "preserve-3d" }}
-        >
-          <img
-            src={post.thumbnail}
-            alt={post.title}
-            className="object-cover w-full h-full"
-          />
-        </div>
-      </div>
-      <div className="text-left">
-        <h3 className="text-lg font-bold mb-1">{post.title}</h3>
-        <p className="text-sm">{post.excerpt}</p>
-      </div>
-    </motion.div>
-  );
-};
-
 export default AllPostsPage;
