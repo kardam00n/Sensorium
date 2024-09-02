@@ -71,7 +71,7 @@ const PlacesSection = () => {
         <div className="text-center mb-20">
           <motion.h2
             ref={textRef}
-            className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl mb-6 inline-block font-bold font-sans-serif"        
+            className="font-heading text-5xl sm:text-7xl md:text-8xl lg:text-9xl mb-6 inline-block font-bold font-sans-serif"        
             variants={headingVariants}
             animate={controls}
           >
