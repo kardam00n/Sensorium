@@ -5,30 +5,13 @@ const ListBlock = ({
     listItems,
     gridColumn,
     gridRow,
-    listAnimateControl,
+    isInView,
     isVertical,
 }) => {
     const listStyle = {
         color: '#D3D3D3',
         textAlign: 'left',
         margin: '0 30px',
-    };
-
-    const listItemVariants = {
-        hover: {
-            scale: 1.05,
-            opacity: 1,
-            transition: {
-                type: 'spring',
-                stiffness: 300,
-                damping: 10,
-                duration: 0.5,
-            },
-        },
-        initial: {
-            scale: 1,
-            opacity: 0,
-        },
     };
 
     return (
@@ -40,24 +23,36 @@ const ListBlock = ({
                 gridRow: isVertical ? '3' : '1',
                 textAlign: isVertical ? 'left' : gridColumn === '1' ? 'left' : 'right',
                 alignSelf: 'center',
-                // fontSize: isVertical ? '2.8vw' : '1.1vw',
             }}
-            animate={listAnimateControl}
+            animate={
+                isInView ?
+                    { opacity: 1 }
+                    :
+                    { opacity: 0 }
+            }
+            transition={
+                isInView ?
+                    {
+                        duration: 2.5,
+                        delay: 0.5 + gridRow * 0.5,
+                    }
+                    :
+                    {
+                        duration: 0,
+                        delay: 0
+                    }
+            }
         >
             <ul>
                 {listItems.map((item, index) => (
                     <motion.li
                         key={index}
                         className="list-item text-1xl"
-                        initial="initial"
-                        whileHover="hover"
-                        animate={{ opacity: listAnimateControl ? 1 : 0 }}
+                        whileHover={{ scale: 1.05 }}
                         transition={{
-                            duration: 1,
+                            duration: 0.3,
                             ease: 'easeOut',
-                            delay: 0.2 + index * 0.1,
                         }}
-                        variants={listItemVariants}
                     >
                         {item}
                     </motion.li>
