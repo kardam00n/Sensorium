@@ -3,8 +3,10 @@ import { CardBody, CardContainer, CardItem } from "./3d-card";
 import "@fontsource/inter";
 import React, { useEffect, useRef, useState } from 'react';
 import { FlipWords } from "./flip-words";
+import AnimatedButton from './about_section/AnimatedButton';
 import "../arrow.css"
 import { ArrowDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Card = ({ title, description, imageUrl, index }) => {
   const cardRef = useRef(null);
@@ -13,6 +15,8 @@ const Card = ({ title, description, imageUrl, index }) => {
     offset: ["start end", "end start"]
   });
   const [hasScrolled, setHasScrolled] = useState(false);
+
+  const navigate = useNavigate();
 
   const springConfig = { stiffness: 100, damping: 30, restDelta: 0.00001 };
   useEffect(() => {
@@ -51,7 +55,7 @@ const Card = ({ title, description, imageUrl, index }) => {
         x,
         opacity,
       }}
-      className="w-full mb-16"
+      className="w-full mb-8"
     >
       <CardContainer className="inter-var">
         <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black w-full h-auto rounded-xl p-8 font-inter border border-white/[0.2]">
@@ -76,15 +80,6 @@ const Card = ({ title, description, imageUrl, index }) => {
                 alt={title}
               />
             </CardItem>
-            <div className="flex justify-center items-center mt-12">
-              <CardItem
-                translateZ={20}
-                as="button"
-                className="px-8 py-4 rounded-xl bg-white text-black text-lg font-bold hover:bg-gray-200 transition-colors"
-              >
-                Dowiedz się więcej
-              </CardItem>
-            </div>
           </div>
         </CardBody>
       </CardContainer>
@@ -182,7 +177,6 @@ const HomeSection = ({videoRef, scrollToSection}) => {
     });
 
     const unsubscribe = scrollYProgress.onChange((value) => {
-      console.log('Scroll progress:', value);
     });
 
     const handleScroll = () => {
@@ -263,10 +257,12 @@ const HomeSection = ({videoRef, scrollToSection}) => {
             index={1}
           />
         </div>
+        <AnimatedButton isInView={true} text={"Dowiedz się więcej"} route={"/about"}/>
       </div>
+        
       </div>
       {!hasScrolled && (
-        <ArrowDown className={`text-white animate-bounce ${hasScrolled ? 'fade-out' : 'fade-in'}`} onClick={() => scrollToSection('about')} style={{
+        <ArrowDown className={`text-white animate-bounce ${hasScrolled ? 'fade-out' : 'fade-in'}`} onClick={() => scrollToSection('posts')} style={{
           position: "absolute",
           left: "50%",
           bottom: "4rem",
