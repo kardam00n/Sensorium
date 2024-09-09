@@ -1,52 +1,130 @@
-import { motion, useAnimation, useScroll, useTransform, useSpring } from 'framer-motion';
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, useAnimation, useScroll, useTransform } from 'framer-motion';
 import { CardBody, CardContainer, CardItem } from "./3d-card";
 import "@fontsource/inter";
-import React, { useEffect, useRef, useState } from 'react';
 import { FlipWords } from "./flip-words";
-import AnimatedButton from './about_section/AnimatedButton';
 import "../arrow.css"
 import { ArrowDown } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+
+const ParallaxStars = () => {
+  const [stars, setStars] = useState([]);
+  const containerRef = useRef(null);
+  const animationRef = useRef(null);
+
+  useEffect(() => {
+    const generateStars = () => {
+      const starCount = 250;
+      return Array.from({ length: starCount }, () => ({
+        x: Math.random() * 100,
+        y: Math.random() * 130,
+        size: Math.random() * 2 + 1,
+        opacity: Math.random() * 0.5 + 0.5,
+        speedX: Math.random() * 0.05 + 0.02,
+        speedY: Math.random() * 0.03 + 0.01
+      }));
+    };
+
+    setStars(generateStars());
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    let mouseX = 0;
+    let mouseY = 0;
+
+    const handleMouseMove = (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    };
+
+    const animateStars = () => {
+      setStars(prevStars => 
+        prevStars.map(star => {
+          let newX = star.x + star.speedX;
+          let newY = star.y + star.speedY;
+
+          if (newX > 100 || newY > 130) {
+            if (Math.random() < 0.3) {
+              newX = Math.random() * 100;
+              newY = -5;
+            } else {
+              newX = -5;
+              newY = Math.random() * 130;
+            }
+            star.speedX = Math.random() * 0.05 + 0.02;
+            star.speedY = Math.random() * 0.03 + 0.01;
+          }
+
+          return {
+            ...star,
+            x: newX,
+            y: newY
+          };
+        })
+      );
+
+      if (containerRef.current) {
+        const speed = 0.05;
+        const x = (window.innerWidth - mouseX * speed) / 100;
+        const y = (window.innerHeight - mouseY * speed) / 100;
+        containerRef.current.style.transform = `translateX(${x}px) translateY(${y}px)`;
+      }
+
+      animationRef.current = requestAnimationFrame(animateStars);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    animateStars();
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden" style={{ height: '130vh' }}>
+      <div ref={containerRef} className="absolute inset-0" style={{ height: '130vh' }}>
+        {stars.map((star, index) => (
+          <div
+            key={index}
+            className="absolute rounded-full bg-white"
+            style={{
+              left: `${star.x}%`,
+              top: `${star.y}%`,
+              width: `${star.size}px`,
+              height: `${star.size}px`,
+              opacity: star.opacity,
+            }}
+          />
+        ))}
+      </div>
+      <div className="absolute inset-0 corner-vignette" style={{ height: '130vh' }}></div>
+    </div>
+  );
+};
 
 const Card = ({ title, description, imageUrl, index }) => {
-  const cardRef = useRef(null);
+  const cardRef = React.useRef(null);
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ["start end", "end start"]
   });
-  const [hasScrolled, setHasScrolled] = useState(false);
 
-  const navigate = useNavigate();
-
-  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.00001 };
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setHasScrolled(true);
-      } else {
-        setHasScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const x = useSpring(
-    useTransform(
-      scrollYProgress,
-      [0, 0.3],
-      [index % 2 === 0 ? '-100%' : '100%', 0]
-    ),
-    springConfig
+  const x = useTransform(
+    scrollYProgress,
+    [0, 0.3],
+    [index % 2 === 0 ? '-100%' : '100%', 0]
   );
 
-  const opacity = useSpring(
-    useTransform(scrollYProgress, [0, 0.2], [0, 1]),
-    springConfig
-  );
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
 
   return (
     <motion.div
@@ -55,7 +133,7 @@ const Card = ({ title, description, imageUrl, index }) => {
         x,
         opacity,
       }}
-      className="w-full mb-8"
+      className="w-full mb-16"
     >
       <CardContainer className="inter-var">
         <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black w-full h-auto rounded-xl p-8 font-inter border border-white/[0.2]">
@@ -80,6 +158,15 @@ const Card = ({ title, description, imageUrl, index }) => {
                 alt={title}
               />
             </CardItem>
+            <div className="flex justify-center items-center mt-12">
+              <CardItem
+                translateZ={20}
+                as="button"
+                className="px-8 py-4 rounded-xl bg-white text-black text-lg font-bold hover:bg-gray-200 transition-colors"
+              >
+                Dowiedz się więcej
+              </CardItem>
+            </div>
           </div>
         </CardBody>
       </CardContainer>
@@ -87,87 +174,9 @@ const Card = ({ title, description, imageUrl, index }) => {
   );
 };
 
-const AnimatedLine = ({ path, delay = 0, duration = 5, opacity }) => (
-    <motion.path
-      d={path}
-      initial={{ pathLength: 0 }}
-      animate={{ 
-        pathLength: [0, 1, 1, 0],
-      }}
-      transition={{ 
-        duration: duration,
-        ease: "easeInOut",
-        times: [0, 0.4, 0.6, 1],
-        repeat: Infinity,
-        delay: delay,
-      }}
-      stroke="rgba(255,255,255,1)"
-      strokeWidth="0.1"
-      fill="none"
-      style={{ opacity }}
-    />
-);
-
-const generateRandomPath = (baseX, baseY) => {
-  const rangeX = 5;
-  const rangeY = 5;
-  let path = `M ${baseX + Math.random() * rangeX} ${baseY + Math.random() * rangeY}`;
-  const numSegments = Math.floor(Math.random() * 2) + 1;
-  for (let i = 0; i < numSegments; i++) {
-    const commandType = Math.random() > 0.5 ? 'L' : 'Q';
-    if (commandType === 'L') {
-      path += ` L ${baseX + Math.random() * rangeX} ${baseY + Math.random() * rangeY}`;
-    } else {
-      path += ` Q ${baseX + Math.random() * rangeX} ${baseY + Math.random() * rangeY}, ${baseX + Math.random() * rangeX} ${baseY + Math.random() * rangeY}`;
-    }
-  }
-  return path;
-};
-
-const BackgroundLines = ({ opacity, scrollProgress }) => {
-  const [lines, setLines] = useState([]);
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const generateLines = () => {
-      const newLines = [];
-      for (let i = 0; i < 150; i++) {
-        const baseX = Math.random() * 100;
-        const baseY = Math.random() * 100;
-        newLines.push({
-          path: generateRandomPath(baseX, baseY),
-          delay: Math.random() * 5,
-          duration: 3 + Math.random() * 2
-        });
-      }
-      setLines(newLines);
-    };
-
-    generateLines();
-  }, []);
-
-  return (
-    <div ref={containerRef} className="absolute top-0 left-0 w-full h-full overflow-hidden">
-      <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-        {lines.map((line, index) => (
-          <AnimatedLine 
-            key={index}
-            path={line.path}
-            delay={line.delay}
-            duration={line.duration}
-            opacity={opacity}
-            scrollProgress={scrollProgress}
-          />
-        ))}
-      </svg>
-    </div>
-  );
-};
-
 const HomeSection = ({videoRef, scrollToSection}) => {
   const titleControls = useAnimation();
   const { scrollYProgress } = useScroll();
-  const backgroundOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
@@ -177,6 +186,7 @@ const HomeSection = ({videoRef, scrollToSection}) => {
     });
 
     const unsubscribe = scrollYProgress.onChange((value) => {
+      console.log('Scroll progress:', value);
     });
 
     const handleScroll = () => {
@@ -216,33 +226,54 @@ const HomeSection = ({videoRef, scrollToSection}) => {
   ];
 
   return (
-    <div className="bg-black text-white overflow-x-hidden">
-      <motion.div className="min-h-screen flex flex-col items-center justify-center relative">
-        <BackgroundLines opacity={backgroundOpacity} scrollProgress={scrollYProgress} />
-        <motion.h1 
-          className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold text-center leading-none tracking-tighter relative z-10 mb-8 px-4"
-          initial={{ opacity: 0 }}
-          animate={titleControls}
-        >
-          {"SENSORIUM".split('').map((letter, index) => (
-            <motion.span
-              key={index}
-              variants={letterVariants}
-              initial="hidden"
-              animate="visible"
-              custom={index}
-              className="inline-block"
-            >
-              {letter}
-            </motion.span>
-          ))}
-        </motion.h1>
-        <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center relative z-20 px-4">
-          <FlipWords words={flipWords} duration={2000} />
+    <div className="bg-[#001e28] text-white overflow-hidden">
+      <div className="relative min-h-[130vh]">
+        <ParallaxStars />
+        <div className="absolute inset-0 flex flex-col items-center justify-center h-screen">
+          <motion.h1 
+            className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold text-center leading-none tracking-tighter z-10 mb-8 px-4"
+            initial={{ opacity: 0 }}
+            animate={titleControls}
+          >
+            {"SENSORIUM".split('').map((letter, index) => (
+              <motion.span
+                key={index}
+                variants={letterVariants}
+                initial="hidden"
+                animate="visible"
+                custom={index}
+                className="inline-block"
+              >
+                {letter}
+              </motion.span>
+            ))}
+          </motion.h1>
+          <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center z-20 px-4 text-[#a0a0a0]">
+            <FlipWords words={flipWords} duration={2000} />
+          </div>
+          {!hasScrolled && (
+            <ArrowDown 
+              className={`text-white animate-bounce ${hasScrolled ? 'fade-out' : 'fade-in'}`} 
+              onClick={() => scrollToSection('about')} 
+              style={{
+                position: "absolute",
+                left: "50%",
+                bottom: "4rem",
+                transform: "translateX(-50%)",
+                width: "2rem",
+                height: "2rem",
+                color: "white",
+                cursor: "pointer",
+                opacity: 0.8
+              }}
+            />
+          )}
         </div>
-      </motion.div>
-      <div className="w-full px-4 py-16">
-      <div className="w-full px-4 py-16">
+      </div>
+      <div className="w-full px-4 py-16 bg-black relative">
+        <svg className="absolute top-0 left-0 w-full h-32 transform -translate-y-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+          <polygon points="0,100 100,0 100,100" fill="#000000" />
+        </svg>
         <div className="flex flex-col md:flex-row justify-center items-stretch gap-16">
           <Card 
             title="Sztuka w Sensorium"
@@ -257,23 +288,7 @@ const HomeSection = ({videoRef, scrollToSection}) => {
             index={1}
           />
         </div>
-        <AnimatedButton isInView={true} text={"Dowiedz się więcej"} route={"/about"}/>
       </div>
-        
-      </div>
-      {!hasScrolled && (
-        <ArrowDown className={`text-white animate-bounce ${hasScrolled ? 'fade-out' : 'fade-in'}`} onClick={() => scrollToSection('posts')} style={{
-          position: "absolute",
-          left: "50%",
-          bottom: "4rem",
-          transform: "translateX(-50%)",
-          width: "2rem",
-          height: "2rem",
-          color: "white",
-          cursor: "pointer",
-          opacity: 0.8
-        }}/>
-      )}
     </div>
   );
 };
