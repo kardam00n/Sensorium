@@ -15,3 +15,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.corner-vignette {
+  background: 
+    radial-gradient(circle at 0 0, rgba(0,0,0,0.3) 0%, transparent 50%) top left,
+    radial-gradient(circle at 100% 100%, rgba(0,0,0,0.3) 0%, transparent 50%) bottom right;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}

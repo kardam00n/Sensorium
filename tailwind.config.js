@@ -4,6 +4,9 @@ module.exports = {
   darkMode: false,
   theme: {
     extend: {
+      colors: {
+        'dark-teal': '#001e28',
+      },
       fontFamily: {
         sans: ['KyivTypeSans', 'system-ui', 'sans-serif'],
         heading: ['NeueKaine', 'system-ui', 'sans-serif'],
