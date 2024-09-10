@@ -14,10 +14,6 @@ import "../darkMode.css";
           }
         }
       };
-
-      useEffect(() => {
-        console.log(posts)
-      },[])
     
       const isInView = useInView(useRef(null), { once: false, margin: '-100px' });
     

@@ -135,9 +135,9 @@ const SensoriumWebsite = () => {
         <AnimatedSection id="home" animation="fadeIn">
           <HomeSection videoRef={videoRef} scrollToSection={scrollToSection} />
         </AnimatedSection>
-        <section id="about">
+        {/* <section id="about">
           <AboutSection />
-        </section>
+        </section> */}
         <AnimatedSection id="posts" animation="slideUp">
           <FeaturedPostsSection posts={posts} openPost={openPost} />
         </AnimatedSection>

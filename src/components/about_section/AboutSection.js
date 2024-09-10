@@ -54,7 +54,7 @@ const AboutSection = () => {
           />
         ))}
       </motion.div>
-      <AnimatedButton isInView={isInView} text={"Więcej o projekcie"} route={"/about"} />
+      {/* <AnimatedButton isInView={isInView} text={"Więcej o projekcie"} route={"/about"} /> */}
     </section>
   );
 };
