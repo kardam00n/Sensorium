@@ -254,7 +254,7 @@ const HomeSection = ({videoRef, scrollToSection}) => {
           {!hasScrolled && (
             <ArrowDown 
               className={`text-white animate-bounce ${hasScrolled ? 'fade-out' : 'fade-in'}`} 
-              onClick={() => scrollToSection('about')} 
+              onClick={() => scrollToSection('infoCards')} 
               style={{
                 position: "absolute",
                 left: "50%",
@@ -274,7 +274,7 @@ const HomeSection = ({videoRef, scrollToSection}) => {
         <svg className="absolute top-0 left-0 w-full h-32 transform -translate-y-full" preserveAspectRatio="none" viewBox="0 0 100 100">
           <polygon points="0,100 100,0 100,100" fill="#000000" />
         </svg>
-        <div className="flex flex-col md:flex-row justify-center items-stretch gap-16">
+        <div id="infoCards" className="flex flex-col md:flex-row justify-center items-stretch gap-16">
           <Card 
             title="Sztuka w Sensorium"
             description="Odkryj nowatorskie postawy artystyczne na styku technologii i kultury."
