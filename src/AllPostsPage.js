@@ -9,6 +9,8 @@ import PostsSection from "./components/PostsSection";
 import { ArrowUp } from "lucide-react";
 import Footer from "./components/Footer";
 import "./darkMode.css";
+import axios from "axios";
+
 
 const AllPostsPage = () => {
   const [activePost, setActivePost] = useState(null);
@@ -16,6 +18,63 @@ const AllPostsPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get('https://sensorium.ii.agh.edu.pl/index.php/wp-json/wp/v2/posts?acf_format=standard');
+        const allPosts = response.data;
+        
+        // Filter featured posts, sort by featured_position, and transform to match original structure
+        const featuredPosts = allPosts
+  .map(post => {
+    // Create a temporary element to parse the HTML content
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = post.content.rendered;
+
+    // Find all gallery elements
+    const galleries = tempDiv.querySelectorAll('.gallery, .wp-block-gallery');
+
+    // Extract image sources from galleries
+    const gallerySources = Array.from(galleries).flatMap(gallery => 
+      Array.from(gallery.querySelectorAll('img')).map(img => img.src)
+    );
+
+    // Combine gallery sources with existing album or use fallback
+    const combinedAlbum = [
+      ...(post.acf.album || []),
+      ...gallerySources
+    ];
+
+    // If combinedAlbum is empty, use fallback
+    const album = combinedAlbum.length > 0 
+      ? combinedAlbum 
+      : [post.acf.thumbnail || post.featured_media_url].filter(Boolean);
+
+    return {
+      id: post.id,
+      title: post.acf.title,
+      excerpt: post.acf.excerpt,
+      content: post.acf.content,
+      thumbnail: post.acf.thumbnail,
+      album: album
+    };
+  });
+        
+        setPosts(featuredPosts);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch posts');
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -87,59 +146,6 @@ const AllPostsPage = () => {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
-
-  const posts = [
-    {
-      id: 1,
-      title: "Odkrywanie Wirtualnej Rzeczywistości",
-      excerpt: "Zanurz się w świat VR i jego wpływ na nasze zmysły.",
-      content:
-        "Pełna treść posta o VR... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum odio eget rutrum posuere. Aliquam rhoncus aliquam hendrerit. Fusce sed enim magna. Sed libero ligula, maximus faucibus est id, facilisis auctor arcu. Vestibulum vulputate, diam id vehicula euismod, risus diam iaculis mi, eget placerat mi massa non metus. Donec metus neque, facilisis eu felis eu, semper feugiat odio. Maecenas euismod arcu orci, vitae molestie lorem mollis eget. Aliquam erat volutpat. Aliquam erat volutpat. Nunc vitae ex massa. Donec a pellentesque enim. In dapibus ex eget semper elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam erat volutpat. Donec at erat ornare, accumsan lacus vel, venenatis velit. ",
-      thumbnail: "/vr.jpg",
-      album: ["/vr.jpg", "/vr_2.jpg"],
-    },
-    {
-      id: 2,
-      title: "Sztuka Projektowania Dźwięku",
-      excerpt:
-        "Odkryj, jak dźwięk kształtuje nasze postrzeganie rzeczywistości.",
-      content:
-        "Pełna treść posta o projektowaniu dźwięku... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum odio eget rutrum posuere. Aliquam rhoncus aliquam hendrerit. Fusce sed enim magna. Sed libero ligula, maximus faucibus est id, facilisis auctor arcu. Vestibulum vulputate, diam id vehicula euismod, risus diam iaculis mi, eget placerat mi massa non metus. Donec metus neque, facilisis eu felis eu, semper feugiat odio. Maecenas euismod arcu orci, vitae molestie lorem mollis eget. Aliquam erat volutpat. Aliquam erat volutpat. Nunc vitae ex massa. Donec a pellentesque enim. In dapibus ex eget semper elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam erat volutpat. Donec at erat ornare, accumsan lacus vel, venenatis velit. ",
-      thumbnail: "/exhibition.jpg",
-      album: ["/exhibition.jpg", "/exhibition_2.jpg"],
-    },
-    {
-      id: 3,
-      title: "Iluzje Wizualne w Sztuce Cyfrowej",
-      excerpt:
-        "Odkryj fascynujący świat iluzji wizualnych w mediach cyfrowych.",
-      content:
-        "Pełna treść posta o iluzjach wizualnych... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum odio eget rutrum posuere. Aliquam rhoncus aliquam hendrerit. Fusce sed enim magna. Sed libero ligula, maximus faucibus est id, facilisis auctor arcu. Vestibulum vulputate, diam id vehicula euismod, risus diam iaculis mi, eget placerat mi massa non metus. Donec metus neque, facilisis eu felis eu, semper feugiat odio. Maecenas euismod arcu orci, vitae molestie lorem mollis eget. Aliquam erat volutpat. Aliquam erat volutpat. Nunc vitae ex massa. Donec a pellentesque enim. In dapibus ex eget semper elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam erat volutpat. Donec at erat ornare, accumsan lacus vel, venenatis velit.Pełna treść posta o iluzjach wizualnych... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum odio eget rutrum posuere. Aliquam rhoncus aliquam hendrerit. Fusce sed enim magna. Sed libero ligula, maximus faucibus est id, facilisis auctor arcu. Vestibulum vulputate, diam id vehicula euismod, risus diam iaculis mi, eget placerat mi massa non metus. Donec metus neque, facilisis eu felis eu, semper feugiat odio. Maecenas euismod arcu orci, vitae molestie lorem mollis eget. Aliquam erat volutpat. Aliquam erat volutpat. Nunc vitae ex massa. Donec a pellentesque enim. In dapibus ex eget semper elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam erat volutpat. Donec at erat ornare, accumsan lacus vel, venenatis velit.Pełna treść posta o iluzjach wizualnych... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum odio eget rutrum posuere. Aliquam rhoncus aliquam hendrerit. Fusce sed enim magna. Sed libero ligula, maximus faucibus est id, facilisis auctor arcu. Vestibulum vulputate, diam id vehicula euismod, risus diam iaculis mi, eget placerat mi massa non metus. Donec metus neque, facilisis eu felis eu, semper feugiat odio. Maecenas euismod arcu orci, vitae molestie lorem mollis eget. Aliquam erat volutpat. Aliquam erat volutpat. Nunc vitae ex massa. Donec a pellentesque enim. In dapibus ex eget semper elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam erat volutpat. Donec at erat ornare, accumsan lacus vel, venenatis velit.Pełna treść posta o iluzjach wizualnych... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum odio eget rutrum posuere. Aliquam rhoncus aliquam hendrerit. Fusce sed enim magna. S",
-      thumbnail: "/debate.jpg",
-      album: ["/debate.jpg", "/debate_2.jpg"],
-    },
-
-    {
-      id: 4,
-      title: "Przyszłość Zwrotu Hapticznego",
-      excerpt:
-        "Dowiedz się o nowych technologiach w zakresie wrażeń dotykowych.",
-      content:
-        "Pełna treść posta o zwrocie haptycznym... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum odio eget rutrum posuere. Aliquam rhoncus aliquam hendrerit. Fusce sed enim magna. Sed libero ligula, maximus faucibus est id, facilisis auctor arcu. Vestibulum vulputate, diam id vehicula euismod, risus diam iaculis mi, eget placerat mi massa non metus. Donec metus neque, facilisis eu felis eu, semper feugiat odio. Maecenas euismod arcu orci, vitae molestie lorem mollis eget. Aliquam erat volutpat. Aliquam erat volutpat. Nunc vitae ex massa. Donec a pellentesque enim. In dapibus ex eget semper elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam erat volutpat. Donec at erat ornare, accumsan lacus vel, venenatis velit. ",
-      thumbnail: "/workshop.jpg",
-      album: ["/workshop.jpg", "/workshop_2.jpg"],
-    },
-    {
-      id: 5,
-      title: "art&science – debata w Pałacu Sztuki",
-      excerpt:
-        "Dowiedz się o nowych technologiach w zakresie wrażeń dotykowych.",
-      content:
-        "Pełna treść posta o zwrocie haptycznym... Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum odio eget rutrum posuere. Aliquam rhoncus aliquam hendrerit. Fusce sed enim magna. Sed libero ligula, maximus faucibus est id, facilisis auctor arcu. Vestibulum vulputate, diam id vehicula euismod, risus diam iaculis mi, eget placerat mi massa non metus. Donec metus neque, facilisis eu felis eu, semper feugiat odio. Maecenas euismod arcu orci, vitae molestie lorem mollis eget. Aliquam erat volutpat. Aliquam erat volutpat. Nunc vitae ex massa. Donec a pellentesque enim. In dapibus ex eget semper elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam erat volutpat. Donec at erat ornare, accumsan lacus vel, venenatis velit. ",
-      thumbnail: "/debate2.jpg",
-      album: ["/debate2.jpg", "/debate2_2.jpg"],
-    },
-  ];
 
   const openPost = (post) => {
     setActivePost(post);

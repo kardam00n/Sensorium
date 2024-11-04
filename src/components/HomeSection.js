@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { motion, useAnimation, useScroll, useTransform } from 'framer-motion';
 import { CardBody, CardContainer, CardItem } from "./3d-card";
+import AnimatedButton from './about_section/AnimatedButton';
 import "@fontsource/inter";
 import { FlipWords } from "./flip-words";
 import "../arrow.css"
@@ -125,7 +127,7 @@ const Card = ({ title, description, imageUrl, index }) => {
   );
 
   const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
-
+  const isInView = useInView(useRef(null), { once: false, margin: '-100px' });
   return (
     <motion.div
       ref={cardRef}
@@ -159,13 +161,7 @@ const Card = ({ title, description, imageUrl, index }) => {
               />
             </CardItem>
             <div className="flex justify-center items-center mt-12">
-              <CardItem
-                translateZ={20}
-                as="button"
-                className="px-8 py-4 rounded-xl bg-white text-black text-lg font-bold hover:bg-gray-200 transition-colors"
-              >
-                Dowiedz się więcej
-              </CardItem>
+              <AnimatedButton isInView={isInView} text={"Dowiedz się więcej"} route={"/about"}/>
             </div>
           </div>
         </CardBody>
@@ -179,16 +175,15 @@ const HomeSection = ({videoRef, scrollToSection}) => {
   const { scrollYProgress } = useScroll();
   const [hasScrolled, setHasScrolled] = useState(false);
 
+  const isInView = useInView(useRef(null), { once: false, margin: '-100px' });
+
   useEffect(() => {
     titleControls.start({
       opacity: 1,
       transition: { duration: 2, ease: "easeOut" }
     });
 
-    const unsubscribe = scrollYProgress.onChange((value) => {
-      console.log('Scroll progress:', value);
-    });
-
+  
     const handleScroll = () => {
       if (window.scrollY > 0) {
         setHasScrolled(true);
@@ -200,7 +195,7 @@ const HomeSection = ({videoRef, scrollToSection}) => {
     window.addEventListener('scroll', handleScroll);
 
     return () => {
-      unsubscribe();
+      // unsubscribe();
       window.removeEventListener('scroll', handleScroll);
     };
   }, [titleControls, scrollYProgress]);
@@ -270,7 +265,7 @@ const HomeSection = ({videoRef, scrollToSection}) => {
           )}
         </div>
       </div>
-      <div className="w-full px-4 py-16 bg-black relative">
+      <div className="w-full px-4 py-8 bg-black relative">
         <svg className="absolute top-0 left-0 w-full h-32 transform -translate-y-full" preserveAspectRatio="none" viewBox="0 0 100 100">
           <polygon points="0,100 100,0 100,100" fill="#000000" />
         </svg>

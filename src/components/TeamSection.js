@@ -73,7 +73,7 @@ const TeamSection = () => {
       id: 1,
       name: "Prof. Alicja Panasiewicz",
       role: "Profesor sztuki, Artystka wizualna",
-      image: "/osoba_1.png",
+      image: "https://sensorium.ii.agh.edu.pl/wp-content/uploads/osoba_1.png",
       description:
         'Absolwentka ASP w Krakowie, specjalizuje się w instalacjach multimedialnych. Wykładowca na UP w Krakowie, organizatorka targów "Nówka Sztuka".',
     },
@@ -81,7 +81,7 @@ const TeamSection = () => {
       id: 2,
       name: "Prof. Aleksander Byrski",
       role: "Profesor nauk informatycznych",
-      image: "/osoba_2.png",
+      image: "https://sensorium.ii.agh.edu.pl/wp-content/uploads/osoba_2.png",
       description:
         "Zastępca Dziekana ds. Współpracy na Wydziale Informatyki AGH. Specjalista w obliczeniach metaheurystycznych i systemach agentowych.",
     },
@@ -89,7 +89,7 @@ const TeamSection = () => {
       id: 3,
       name: "Prof. Jacek Wachowski",
       role: "Profesor nauk humanistycznych",
-      image: "/osoba_3.png",
+      image: "https://sensorium.ii.agh.edu.pl/wp-content/uploads/osoba_3.png",
       description:
         "Profesor w Katedrze Teatru i Sztuki Mediów UAM. Specjalista w performatyce i komunikacji społecznej.",
     },
@@ -198,7 +198,7 @@ const TeamSection = () => {
                 <AnimatePresence initial={false} custom={direction}>
                   <motion.img
                     key={selectedMember ? selectedMember.id : "placeholder"}
-                    src={selectedMember ? selectedMember.image : "/placeholder.png"}
+                    src={selectedMember ? selectedMember.image : "https://sensorium.ii.agh.edu.pl/wp-content/uploads/placeholder.png"}
                     alt={selectedMember ? selectedMember.name : "Select a team member"}
                     className="w-full h-full object-contain absolute top-0 left-0"
                     variants={waveVariants}
@@ -263,7 +263,7 @@ const TeamSection = () => {
                             >
                               <img
                                 key={selectedMember ? selectedMember.id : "placeholder"}
-                                src={selectedMember ? selectedMember.image : "/placeholder.png"}
+                                src={selectedMember ? selectedMember.image : "https://sensorium.ii.agh.edu.pl/wp-content/uploads/placeholder.png"}
                                 alt={selectedMember ? selectedMember.name : "Select a team member"}
                                 className="w-full h-full object-contain absolute top-0 left-0"
                                 style={{

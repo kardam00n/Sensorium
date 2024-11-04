@@ -63,6 +63,15 @@ const PostModal = ({ activePost, closePost }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isMobile, contentScrollAmount]);
 
+  const processContent = (content) => {
+    // Split content by <p> tags
+    const paragraphs = content.split(/<\/?p>/).filter(p => p.trim() !== '');
+    
+    return paragraphs.map((paragraph, index) => (
+      <p key={index} className="mb-4">{paragraph.trim()}</p>
+    ));
+  };
+
   return (
     <AnimatePresence>
       {activePost && (
@@ -119,7 +128,7 @@ const PostModal = ({ activePost, closePost }) => {
                   }`}
                   style={isMobile ? {} : { maxHeight: "calc(100vh - 250px)" }}
                 >
-                  {activePost.content}
+                  {processContent(activePost.content)}
                 </div>
                 {!isMobile && contentScrollAmount > 0 && (
                   <div className="flex justify-center mt-2">

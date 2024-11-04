@@ -1,10 +1,72 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import AnimatedButton from './about_section/AnimatedButton';
 import "../darkMode.css";
+import axios from 'axios';
 
-    const FeaturedPostsSection = ({posts, openPost}) => {
+    const FeaturedPostsSection = ({openPost}) => {
+
+      const [posts, setPosts] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+    
+      useEffect(() => {
+        const fetchPosts = async () => {
+          try {
+            const response = await axios.get('https://sensorium.ii.agh.edu.pl/index.php/wp-json/wp/v2/posts?acf_format=standard');
+            const allPosts = response.data;
+            
+            // Filter featured posts, sort by featured_position, and transform to match original structure
+            const featuredPosts = allPosts
+      .filter(post => post.acf && post.acf.featured)
+      .sort((a, b) => (a.acf.featured_position || 0) - (b.acf.featured_position || 0))
+      .map(post => {
+        // Create a temporary element to parse the HTML content
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = post.content.rendered;
+    
+        // Find all gallery elements
+        const galleries = tempDiv.querySelectorAll('.gallery, .wp-block-gallery');
+    
+        // Extract image sources from galleries
+        const gallerySources = Array.from(galleries).flatMap(gallery => 
+          Array.from(gallery.querySelectorAll('img')).map(img => img.src)
+        );
+    
+        // Combine gallery sources with existing album or use fallback
+        const combinedAlbum = [
+          ...(post.acf.album || []),
+          ...gallerySources
+        ];
+    
+        // If combinedAlbum is empty, use fallback
+        const album = combinedAlbum.length > 0 
+          ? combinedAlbum 
+          : [post.acf.thumbnail || post.featured_media_url].filter(Boolean);
+    
+        return {
+          id: post.id,
+          title: post.acf.title,
+          excerpt: post.acf.excerpt,
+          content: post.acf.content,
+          thumbnail: post.acf.thumbnail,
+          album: album
+        };
+      });
+            
+            setPosts(featuredPosts);
+            setLoading(false);
+          } catch (err) {
+            setError('Failed to fetch posts');
+            setLoading(false);
+          }
+        };
+    
+        fetchPosts();
+      }, []);
+
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {

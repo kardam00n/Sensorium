@@ -1,10 +1,11 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import AnimatedButton from './about_section/AnimatedButton';
-import "../darkMode.css";
+import axios from 'axios';
 
-const PostsSection = ({ posts, openPost, searchQuery, handleSearchChange }) => {
+const PostsSection = ({ posts, openPost }) => {
+  
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -15,30 +16,19 @@ const PostsSection = ({ posts, openPost, searchQuery, handleSearchChange }) => {
     }
   };
 
-  const isInView = useInView(useRef(null), { once: false, margin: '-100px' });
-
-  if (!Array.isArray(posts) || posts.length === 0) {
+  if (posts.length === 0) {
     return (
-      <section
-        id="posts"
-        className="py-20 dark-mode"
-      >
+      <section id="posts" className="py-20 dark-mode">
         <div className="container mx-auto px-4">
-          <p className="text-center ">Brak dostępnych postów.</p>
+          <p className="text-center">No featured posts available.</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section
-      id="posts"
-      className="py-16 w-full h-full dark-mode min-h-screen flex flex-col items-center overflow-x-hidden relative"
-    >
+    <section id="posts" className="py-16 w-full h-full dark-mode min-h-screen flex flex-col items-center overflow-x-hidden relative">
       <div className="container px-4 flex-grow">
-        {posts.length === 0 && (
-          <p className="text-center ">Brak dostępnych postów.</p>
-        )}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
           variants={containerVariants}
@@ -56,7 +46,6 @@ const PostsSection = ({ posts, openPost, searchQuery, handleSearchChange }) => {
           ))}
         </motion.div>
       </div>
-     
     </section>
   );
 };
@@ -95,8 +84,7 @@ const PostItem = ({ post, index, openPost, isRight }) => {
     const thumbnail = thumbnailRef.current;
     if (!thumbnail) return;
 
-    thumbnail.style.transform =
-      "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+    thumbnail.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
   }, []);
 
   const itemVariants = {

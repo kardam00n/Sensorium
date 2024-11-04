@@ -23,7 +23,7 @@ const MobileMenu = ({
       home: "/",
       posts: "/allPosts",
       about: "/about",
-      contact: "/contact",
+      contact: "/index.php/contact",
     };
     return routes[section] || "/";
   };
