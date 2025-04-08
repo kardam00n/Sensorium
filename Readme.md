@@ -2,7 +2,7 @@
 
 Project of a page made for "Sensorium" project, the aim of which is to combine art and technology.
 
-https://www.youtube.com/watch?v=jSXL4BMobjo
+[![Video Preview](thumbnail.jpg)](https://www.youtube.com/watch?v=jSXL4BMobjo)
 
 ## Tech Stack
 
