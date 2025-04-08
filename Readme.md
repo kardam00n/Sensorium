@@ -3,7 +3,7 @@
 Project of a page made for "Sensorium" project, the aim of which is to combine art and technology.
 
 [![Video Preview](thumbnail.jpg)](https://www.youtube.com/watch?v=jSXL4BMobjo)
-
+*Click to see the preview video on YouTube*
 ## Tech Stack
 
 Web page developed with the purpose of being served on Wordpress backend. However current version provides backend using NodeJS.
